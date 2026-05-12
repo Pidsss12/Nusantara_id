@@ -1,41 +1,39 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Packages'); ?>
+<?php $__env->startSection('page-title', 'Manage Packages'); ?>
+<?php $__env->startSection('page-subtitle', 'Create and manage tour packages'); ?>
 
-@section('title', 'Packages')
-@section('page-title', 'Manage Packages')
-@section('page-subtitle', 'Create and manage tour packages')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="card shadow-sm border-0 rounded-4 mb-4">
     <div class="card-body">
         <div class="row g-3 align-items-center">
             <div class="col-lg-9">
-                <form action="{{ route('admin.packages') }}" method="GET" class="row g-2">
+                <form action="<?php echo e(route('admin.packages')); ?>" method="GET" class="row g-2">
                     <div class="col-md-4">
                         <div class="input-group">
                             <span class="input-group-text bg-transparent border-end-0 text-muted">
                                 <i class="bi bi-search"></i>
                             </span>
-                            <input type="text" name="search" class="form-control border-start-0" placeholder="Search packages..." value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control border-start-0" placeholder="Search packages..." value="<?php echo e(request('search')); ?>">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <select name="destination_id" class="form-select">
                             <option value="">All Destinations</option>
-                            @foreach($destinations as $dest)
-                            <option value="{{ $dest->id }}" {{ request('destination_id') == $dest->id ? 'selected' : '' }}>{{ $dest->name }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $destinations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dest): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($dest->id); ?>" <?php echo e(request('destination_id') == $dest->id ? 'selected' : ''); ?>><?php echo e($dest->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <select name="status" class="form-select">
                             <option value="">All Status</option>
-                            <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                            <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="Active" <?php echo e(request('status') == 'Active' ? 'selected' : ''); ?>>Active</option>
+                            <option value="Inactive" <?php echo e(request('status') == 'Inactive' ? 'selected' : ''); ?>>Inactive</option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <button type="submit" class="btn btn-success rounded-pill px-3">Filter</button>
-                        <a href="{{ route('admin.packages') }}" class="btn btn-outline-secondary rounded-pill px-3">Reset</a>
+                        <a href="<?php echo e(route('admin.packages')); ?>" class="btn btn-outline-secondary rounded-pill px-3">Reset</a>
                     </div>
                 </form>
             </div>
@@ -49,47 +47,48 @@
 </div>
 
 <div class="row g-4">
-    @forelse($packages as $pkg)
+    <?php $__empty_1 = true; $__currentLoopData = $packages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pkg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
     <div class="col-lg-4 col-md-6">
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="position-relative">
-                <img src="{{ $pkg->image ? asset($pkg->image) : 'https://picsum.photos/seed/pkg' . $pkg->id . '/400/250' }}" class="card-img-top" style="height: 200px; object-fit: cover; border-radius: 16px 16px 0 0;">
-                <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-{{ $pkg->status == 'Active' ? 'success' : 'secondary' }} shadow-sm">
-                    {{ $pkg->status }}
+                <img src="<?php echo e($pkg->image ? asset($pkg->image) : 'https://picsum.photos/seed/pkg' . $pkg->id . '/400/250'); ?>" class="card-img-top" style="height: 200px; object-fit: cover; border-radius: 16px 16px 0 0;">
+                <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-<?php echo e($pkg->status == 'Active' ? 'success' : 'secondary'); ?> shadow-sm">
+                    <?php echo e($pkg->status); ?>
+
                 </span>
             </div>
             <div class="card-body">
                 <div class="mb-2">
-                    <h5 class="fw-bold mb-1">{{ $pkg->name }}</h5>
-                    <small class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ $pkg->destination->name ?? '-' }}</small>
+                    <h5 class="fw-bold mb-1"><?php echo e($pkg->name); ?></h5>
+                    <small class="text-muted"><i class="bi bi-geo-alt me-1"></i><?php echo e($pkg->destination->name ?? '-'); ?></small>
                 </div>
                 
                 <div class="row g-0 text-center py-3 my-3 border-top border-bottom">
                     <div class="col-4 border-end">
                         <i class="bi bi-calendar3 text-success d-block mb-1"></i>
-                        <small class="fw-bold">{{ $pkg->duration }}</small>
+                        <small class="fw-bold"><?php echo e($pkg->duration); ?></small>
                     </div>
                     <div class="col-4 border-end">
                         <i class="bi bi-people text-primary d-block mb-1"></i>
-                        <small class="fw-bold">{{ $pkg->max_participants }} Max</small>
+                        <small class="fw-bold"><?php echo e($pkg->max_participants); ?> Max</small>
                     </div>
                     <div class="col-4">
                         <i class="bi bi-bookmark-check text-warning d-block mb-1"></i>
-                        <small class="fw-bold">{{ $pkg->bookings_count }} Booked</small>
+                        <small class="fw-bold"><?php echo e($pkg->bookings_count); ?> Booked</small>
                     </div>
                 </div>
                 
                 <div class="d-flex justify-content-between align-items-center mt-auto">
                     <div>
                         <small class="text-muted d-block">Price</small>
-                        <h5 class="text-success fw-bold mb-0">Rp {{ number_format($pkg->price, 0, ',', '.') }}</h5>
+                        <h5 class="text-success fw-bold mb-0">Rp <?php echo e(number_format($pkg->price, 0, ',', '.')); ?></h5>
                     </div>
                     <div class="btn-group">
-                        <button class="btn btn-sm btn-outline-primary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editPackage{{ $pkg->id }}">
+                        <button class="btn btn-sm btn-outline-primary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editPackage<?php echo e($pkg->id); ?>">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <form action="{{ route('admin.packages.destroy', $pkg) }}" method="POST" class="delete-form">
-                            @csrf @method('DELETE')
+                        <form action="<?php echo e(route('admin.packages.destroy', $pkg)); ?>" method="POST" class="delete-form">
+                            <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                             <button type="button" class="btn btn-sm btn-outline-danger rounded-pill btn-delete">
                                 <i class="bi bi-trash"></i>
                             </button>
@@ -100,11 +99,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editPackage{{ $pkg->id }}" tabindex="-1">
+    <div class="modal fade" id="editPackage<?php echo e($pkg->id); ?>" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content rounded-4 border-0 shadow">
-                <form action="{{ route('admin.packages.update', $pkg) }}" method="POST" enctype="multipart/form-data">
-                    @csrf @method('PUT')
+                <form action="<?php echo e(route('admin.packages.update', $pkg)); ?>" method="POST" enctype="multipart/form-data">
+                    <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
                     <div class="modal-header bg-primary text-white border-0">
                         <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Package</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -113,38 +112,38 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Package Name</label>
-                                <input type="text" name="name" class="form-control rounded-3" value="{{ $pkg->name }}" required>
+                                <input type="text" name="name" class="form-control rounded-3" value="<?php echo e($pkg->name); ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Destination</label>
                                 <select name="destination_id" class="form-select rounded-3" required>
-                                    @foreach($destinations as $dest)
-                                    <option value="{{ $dest->id }}" {{ $pkg->destination_id == $dest->id ? 'selected' : '' }}>{{ $dest->name }}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $destinations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dest): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($dest->id); ?>" <?php echo e($pkg->destination_id == $dest->id ? 'selected' : ''); ?>><?php echo e($dest->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Duration</label>
-                                <input type="text" name="duration" class="form-control rounded-3" value="{{ $pkg->duration }}" placeholder="e.g. 3D/2N" required>
+                                <input type="text" name="duration" class="form-control rounded-3" value="<?php echo e($pkg->duration); ?>" placeholder="e.g. 3D/2N" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Price (Rp)</label>
-                                <input type="number" name="price" class="form-control rounded-3" value="{{ $pkg->price }}" required>
+                                <input type="number" name="price" class="form-control rounded-3" value="<?php echo e($pkg->price); ?>" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Max Participants</label>
-                                <input type="number" name="max_participants" class="form-control rounded-3" value="{{ $pkg->max_participants }}" required>
+                                <input type="number" name="max_participants" class="form-control rounded-3" value="<?php echo e($pkg->max_participants); ?>" required>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Status</label>
                                 <select name="status" class="form-select rounded-3">
-                                    <option value="Active" {{ $pkg->status == 'Active' ? 'selected' : '' }}>Active</option>
-                                    <option value="Inactive" {{ $pkg->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                    <option value="Active" <?php echo e($pkg->status == 'Active' ? 'selected' : ''); ?>>Active</option>
+                                    <option value="Inactive" <?php echo e($pkg->status == 'Inactive' ? 'selected' : ''); ?>>Inactive</option>
                                 </select>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Description</label>
-                                <textarea name="description" class="form-control rounded-3" rows="4">{{ $pkg->description }}</textarea>
+                                <textarea name="description" class="form-control rounded-3" rows="4"><?php echo e($pkg->description); ?></textarea>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Update Image</label>
@@ -160,7 +159,7 @@
             </div>
         </div>
     </div>
-    @empty
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
     <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 py-5">
             <div class="card-body text-center text-muted">
@@ -170,20 +169,21 @@
             </div>
         </div>
     </div>
-    @endforelse
+    <?php endif; ?>
 </div>
 
-@if($packages->hasPages())
+<?php if($packages->hasPages()): ?>
 <div class="d-flex justify-content-center mt-5">
-    {{ $packages->appends(request()->query())->links() }}
+    <?php echo e($packages->appends(request()->query())->links()); ?>
+
 </div>
-@endif
+<?php endif; ?>
 
 <div class="modal fade" id="addPackageModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content rounded-4 border-0 shadow">
-            <form action="{{ route('admin.packages.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <form action="<?php echo e(route('admin.packages.store')); ?>" method="POST" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
                 <div class="modal-header bg-success text-white border-0">
                     <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-2"></i>Create New Package</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -198,9 +198,9 @@
                             <label class="form-label fw-bold">Destination</label>
                             <select name="destination_id" class="form-select rounded-3" required>
                                 <option value="">Select Destination</option>
-                                @foreach($destinations as $dest)
-                                <option value="{{ $dest->id }}">{{ $dest->name }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $destinations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dest): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($dest->id); ?>"><?php echo e($dest->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -233,9 +233,9 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
+<?php $__env->startSection('scripts'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.btn-delete');
@@ -266,4 +266,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Nusantara_id\resources\views/admin/packages.blade.php ENDPATH**/ ?>

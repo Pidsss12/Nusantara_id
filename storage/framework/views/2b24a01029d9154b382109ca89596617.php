@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>NusantaraGreen - @yield('title', 'Ekowisata Indonesia')</title>
-    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title>NusantaraGreen - <?php echo $__env->yieldContent('title', 'Ekowisata Indonesia'); ?></title>
+    <link rel="icon" type="image/png" href="<?php echo e(asset('img/logo.png')); ?>">
     
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Outfit:400,600,700" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/sass/app.scss', 'resources/js/app.js']); ?>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -185,8 +185,8 @@
 <body>
     <header id="main-header">
         <div id="header-content">
-            <a href="{{ url('/') }}" id="brand-logo">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo">
+            <a href="<?php echo e(url('/')); ?>" id="brand-logo">
+                <img src="<?php echo e(asset('img/logo.png')); ?>" alt="Logo">
                 <div id="brand-text">
                     <span id="brand-name">NusantaraGreen</span>
                     <span id="brand-rating"><i class="bi bi-star-fill"></i> 4.9</span>
@@ -196,50 +196,50 @@
             <div id="main-nav-container">
                 <nav>
                     <ul id="main-menu">
-                        <li><a href="{{ route('home.index') }}" class="menu-link {{ Request::is('/') ? 'active' : '' }}">Home</a></li>
-                        <li><a href="{{ route('destinations.index') }}" class="menu-link {{ Request::is('destinations*') ? 'active' : '' }}">Wisata</a></li>
-                        <li><a href="{{ route('education') }}" class="menu-link {{ Request::is('education') ? 'active' : '' }}">Paket Edukasi</a></li>
-                        <li><a href="{{ route('invoice.check') }}" class="menu-link {{ Request::is('invoice*') ? 'active' : '' }}">Cek Invoice</a></li>
-                        <li><a href="{{ route('about') }}" class="menu-link {{ Request::is('about') ? 'active' : '' }}">Tentang</a></li>
+                        <li><a href="<?php echo e(route('home.index')); ?>" class="menu-link <?php echo e(Request::is('/') ? 'active' : ''); ?>">Home</a></li>
+                        <li><a href="<?php echo e(route('destinations.index')); ?>" class="menu-link <?php echo e(Request::is('destinations*') ? 'active' : ''); ?>">Wisata</a></li>
+                        <li><a href="<?php echo e(route('education')); ?>" class="menu-link <?php echo e(Request::is('education') ? 'active' : ''); ?>">Paket Edukasi</a></li>
+                        <li><a href="<?php echo e(route('invoice.check')); ?>" class="menu-link <?php echo e(Request::is('invoice*') ? 'active' : ''); ?>">Cek Invoice</a></li>
+                        <li><a href="<?php echo e(route('about')); ?>" class="menu-link <?php echo e(Request::is('about') ? 'active' : ''); ?>">Tentang</a></li>
                     </ul>
                 </nav>
             </div>
             
             <div id="auth-buttons">
-                @guest
-                    <a href="{{ route('login') }}" class="btn-login">Login</a>
-                    <a href="{{ route('register') }}" class="btn-dashboard">Register</a>
-                @else
-                    @if(Auth::user()->role == 'admin')
-                    <a href="{{ route('admin.dashboard') }}" class="btn-login" style="background: rgba(255,255,255,0.2);">
+                <?php if(auth()->guard()->guest()): ?>
+                    <a href="<?php echo e(route('login')); ?>" class="btn-login">Login</a>
+                    <a href="<?php echo e(route('register')); ?>" class="btn-dashboard">Register</a>
+                <?php else: ?>
+                    <?php if(Auth::user()->role == 'admin'): ?>
+                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="btn-login" style="background: rgba(255,255,255,0.2);">
                         <i class="bi bi-speedometer2 me-1"></i>Admin
                     </a>
-                    @endif
+                    <?php endif; ?>
                     
-                    <a href="{{ route('user.dashboard') }}" class="btn-dashboard">
+                    <a href="<?php echo e(route('user.dashboard')); ?>" class="btn-dashboard">
                         <i class="bi bi-grid me-1"></i>Dashboard
                     </a>
                     
-                    <a href="{{ route('logout') }}" class="btn-logout" 
+                    <a href="<?php echo e(route('logout')); ?>" class="btn-logout" 
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         Logout
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
-                @endguest
+                    <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;"><?php echo csrf_field(); ?></form>
+                <?php endif; ?>
             </div>
         </div>
     </header>
 
     <main>
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
     
     <footer style="background: #198754; color: white; padding: 30px 0;">
         <div style="max-width: 1400px; margin: 0 auto; padding: 0 30px; text-align: center;">
             <p style="margin: 0; font-size: 14px; opacity: 0.9;">
-                &copy; {{ date('Y') }} NusantaraGreen. All rights reserved. | Portal Ekowisata Indonesia
+                &copy; <?php echo e(date('Y')); ?> NusantaraGreen. All rights reserved. | Portal Ekowisata Indonesia
             </p>
         </div>
     </footer>
 </body>
-</html>
+</html><?php /**PATH D:\Nusantara_id\resources\views/layouts/app.blade.php ENDPATH**/ ?>

@@ -5,9 +5,6 @@
 @section('page-subtitle', 'View and manage all booking requests')
 
 @section('content')
-<!-- session success handled by layout -->
-
-<!-- Stats Cards -->
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="card border-0 shadow-sm rounded-4 bg-success text-white">
@@ -43,7 +40,6 @@
     </div>
 </div>
 
-<!-- Filters -->
 <div class="card shadow-sm border-0 rounded-4 mb-4">
     <div class="card-body">
         <form action="{{ route('admin.bookings') }}" method="GET" class="row g-3">
@@ -67,7 +63,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}" placeholder="From Date">
+                <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
             </div>
             <div class="col-md-3">
                 <button type="submit" class="btn btn-success rounded-pill me-2"><i class="bi bi-search"></i> Filter</button>
@@ -77,11 +73,10 @@
     </div>
 </div>
 
-<!-- Bookings Table -->
 <div class="card shadow-sm border-0 rounded-4">
     <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
+        <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+            <table class="table table-hover mb-0" style="white-space: nowrap; min-width: 1000px;">
                 <thead class="bg-light">
                     <tr>
                         <th class="border-0 px-4">Booking ID</th>
@@ -92,7 +87,7 @@
                         <th class="border-0">Pax</th>
                         <th class="border-0">Amount</th>
                         <th class="border-0">Status</th>
-                        <th class="border-0">Actions</th>
+                        <th class="border-0 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,7 +96,7 @@
                         <td class="px-4 fw-bold text-primary">#{{ $booking->booking_code }}</td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 12px;">
+                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 11px; flex-shrink: 0;">
                                     {{ strtoupper(substr($booking->customer_name, 0, 2)) }}
                                 </div>
                                 <div>
@@ -111,26 +106,30 @@
                             </div>
                         </td>
                         <td>{{ $booking->destination->name ?? '-' }}</td>
-                        <td><span class="badge bg-primary-subtle text-primary">{{ $booking->package->name ?? 'No Package' }}</span></td>
+                        <td><span class="badge bg-primary-subtle text-primary border-0">{{ $booking->package->name ?? 'No Package' }}</span></td>
                         <td>{{ $booking->visit_date->format('d M Y') }}</td>
                         <td><span class="badge bg-secondary">{{ $booking->participants }}</span></td>
                         <td class="fw-bold text-success">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
-                        <td><span class="badge bg-{{ $booking->status == 'Confirmed' ? 'success' : ($booking->status == 'Pending' ? 'warning' : 'danger') }}">{{ $booking->status }}</span></td>
                         <td>
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewBooking{{ $booking->id }}" title="View"><i class="bi bi-eye"></i></button>
+                            <span class="badge rounded-pill bg-{{ $booking->status == 'Confirmed' ? 'success' : ($booking->status == 'Pending' ? 'warning text-dark' : 'danger') }}">
+                                {{ $booking->status }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewBooking{{ $booking->id }}" title="View"><i class="bi bi-eye"></i></button>
                                 @if($booking->status == 'Pending')
                                 <form action="{{ route('admin.bookings.status', $booking) }}" method="POST" style="display:inline;">
                                     @csrf @method('PATCH')
                                     <input type="hidden" name="status" value="Confirmed">
-                                    <button type="submit" class="btn btn-outline-success btn-sm" title="Confirm"><i class="bi bi-check"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-outline-success" title="Confirm"><i class="bi bi-check-lg"></i></button>
                                 </form>
                                 @endif
                                 @if($booking->status != 'Cancelled')
                                 <form action="{{ route('admin.bookings.status', $booking) }}" method="POST" style="display:inline;" class="action-form">
                                     @csrf @method('PATCH')
                                     <input type="hidden" name="status" value="Cancelled">
-                                    <button type="button" class="btn btn-outline-danger btn-sm btn-action-confirm" title="Cancel"><i class="bi bi-x"></i></button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger btn-action-confirm" title="Cancel"><i class="bi bi-x-lg"></i></button>
                                 </form>
                                 @endif
                             </div>
@@ -138,81 +137,12 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center py-4 text-muted">No bookings found</td>
+                        <td colspan="9" class="text-center py-5 text-muted">No bookings found</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-    @if($bookings->hasPages())
-    <div class="card-footer">
-        {{ $bookings->appends(request()->query())->links() }}
-    </div>
-    @endif
 </div>
-
-<!-- View Booking Modals -->
-@foreach($bookings as $booking)
-<div class="modal fade" id="viewBooking{{ $booking->id }}" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content rounded-4">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="bi bi-eye me-2"></i>Booking #{{ $booking->booking_code }}</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-borderless">
-                    <tr><th width="40%">Customer</th><td>{{ $booking->customer_name }}</td></tr>
-                    <tr><th>Email</th><td>{{ $booking->customer_email }}</td></tr>
-                    <tr><th>Phone</th><td>{{ $booking->customer_phone ?? '-' }}</td></tr>
-                    <tr><th>Institution</th><td>{{ $booking->institution ?? '-' }}</td></tr>
-                    <tr><th>Destination</th><td>{{ $booking->destination->name ?? '-' }}</td></tr>
-                    <tr><th>Package</th><td>{{ $booking->package->name ?? 'No Package' }}</td></tr>
-                    <tr><th>Visit Date</th><td>{{ $booking->visit_date->format('d M Y') }}</td></tr>
-                    <tr><th>Participants</th><td>{{ $booking->participants }} orang</td></tr>
-                    <tr><th>Total Amount</th><td class="fw-bold text-success">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td></tr>
-                    <tr><th>Status</th><td><span class="badge bg-{{ $booking->status == 'Confirmed' ? 'success' : ($booking->status == 'Pending' ? 'warning' : 'danger') }}">{{ $booking->status }}</span></td></tr>
-                    <tr><th>Notes</th><td>{{ $booking->notes ?? '-' }}</td></tr>
-                    <tr><th>Created</th><td>{{ $booking->created_at->format('d M Y H:i') }}</td></tr>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-@section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const confirmButtons = document.querySelectorAll('.btn-action-confirm');
-        confirmButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                const form = this.closest('.action-form');
-                const action = this.title || 'perform this action';
-                
-                Swal.fire({
-                    title: action + '?',
-                    text: "Are you sure you want to " + action.toLowerCase() + " this booking?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, ' + action.toLowerCase() + '!',
-                    cancelButtonText: 'Cancel',
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    customClass: {
-                        popup: 'premium-card',
-                        title: 'fw-bold text-danger',
-                        confirmButton: 'rounded-pill px-4',
-                        cancelButton: 'rounded-pill px-4'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    });
-</script>
 @endsection

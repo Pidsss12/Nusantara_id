@@ -60,6 +60,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix
     
     // Destinations CRUD
     Route::get('/destinations', [\App\Http\Controllers\Admin\DestinationController::class, 'index'])->name('destinations');
+    // ... (rute destinations lainnya tetap sama)
     Route::post('/destinations', [\App\Http\Controllers\Admin\DestinationController::class, 'store'])->name('destinations.store');
     Route::get('/destinations/{destination}', [\App\Http\Controllers\Admin\DestinationController::class, 'show'])->name('destinations.show');
     Route::get('/destinations/{destination}/edit', [\App\Http\Controllers\Admin\DestinationController::class, 'edit'])->name('destinations.edit');
@@ -93,5 +94,6 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix
     // Settings
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings');
     Route::put('/settings/profile', [\App\Http\Controllers\Admin\SettingController::class, 'updateProfile'])->name('settings.profile');
+    Route::put('/settings/profile/image', [\App\Http\Controllers\Admin\SettingController::class, 'updateImage'])->name('settings.profile.image'); // Baris Baru
     Route::put('/settings/password', [\App\Http\Controllers\Admin\SettingController::class, 'updatePassword'])->name('settings.password');
 });

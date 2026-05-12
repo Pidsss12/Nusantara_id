@@ -1,38 +1,36 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Settings'); ?>
+<?php $__env->startSection('page-title', 'Settings'); ?>
+<?php $__env->startSection('page-subtitle', 'Configure system settings'); ?>
 
-@section('title', 'Settings')
-@section('page-title', 'Settings')
-@section('page-subtitle', 'Configure system settings')
+<?php $__env->startSection('content'); ?>
 
-@section('content')
-{{-- Notifikasi Sukses --}}
-@if(session('success'))
+<?php if(session('success')): ?>
 <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
     <div class="d-flex align-items-center">
         <i class="bi bi-check-circle-fill fs-4 me-3"></i>
-        <div>{{ session('success') }}</div>
+        <div><?php echo e(session('success')); ?></div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
-@endif
+<?php endif; ?>
 
-{{-- Notifikasi Error --}}
-@if($errors->any())
+
+<?php if($errors->any()): ?>
 <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
     <div class="d-flex">
         <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
         <ul class="mb-0">
-            @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
+            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <li><?php echo e($error); ?></li>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </ul>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
-@endif
+<?php endif; ?>
 
 <div class="row g-4">
-    {{-- Sidebar Navigasi --}}
+    
     <div class="col-lg-3">
         <div class="premium-card p-0 overflow-hidden shadow-sm border-0 rounded-4">
             <div class="list-group list-group-flush border-0">
@@ -84,7 +82,7 @@
     
     <div class="col-lg-9">
         <div class="tab-content">
-            {{-- Tab Profile --}}
+            
             <div class="tab-pane fade show active" id="profile">
                 <div class="premium-card p-4 shadow-sm border-0 rounded-4" style="background: #fff;">
                     <div class="d-flex align-items-center mb-5 pb-3 border-bottom">
@@ -94,22 +92,22 @@
                     
                     <div class="row align-items-center mb-5">
                         <div class="col-auto">
-                            <form action="{{ route('admin.settings.profile.image') }}" method="POST" enctype="multipart/form-data" id="avatarForm">
-                                @csrf 
-                                @method('PUT')
+                            <form action="<?php echo e(route('admin.settings.profile.image')); ?>" method="POST" enctype="multipart/form-data" id="avatarForm">
+                                <?php echo csrf_field(); ?> 
+                                <?php echo method_field('PUT'); ?>
                                 <div class="position-relative">
-                                    {{-- LOGIKA FOTO: Panggil storage, tambah time() biar gak cache, dan onerror untuk fallback --}}
-                                    @php
+                                    
+                                    <?php
                                         $defaultAvatar = 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=198754&color=fff&size=128';
                                         $userAvatar = Auth::user()->avatar ? asset('storage/'.Auth::user()->avatar) . '?' . time() : $defaultAvatar;
-                                    @endphp
+                                    ?>
 
-                                    <img src="{{ $userAvatar }}" 
+                                    <img src="<?php echo e($userAvatar); ?>" 
                                          class="rounded-circle shadow border border-4 border-white" 
                                          width="120" height="120" 
                                          style="object-fit: cover;"
                                          alt="Avatar" id="avatarPreview"
-                                         onerror="this.onerror=null;this.src='{{ $defaultAvatar }}';">
+                                         onerror="this.onerror=null;this.src='<?php echo e($defaultAvatar); ?>';">
                                     
                                     <input type="file" name="avatar" id="avatarInput" hidden accept="image/*" onchange="document.getElementById('avatarForm').submit()">
                                     
@@ -122,28 +120,28 @@
                             </form>
                         </div>
                         <div class="col">
-                            <h4 class="fw-bold mb-1 text-dark">{{ Auth::user()->name }}</h4>
+                            <h4 class="fw-bold mb-1 text-dark"><?php echo e(Auth::user()->name); ?></h4>
                             <p class="text-muted mb-0">
                                 <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Administrator</span>
                             </p>
                         </div>
                     </div>
 
-                    <form action="{{ route('admin.settings.profile') }}" method="POST">
-                        @csrf 
-                        @method('PUT')
+                    <form action="<?php echo e(route('admin.settings.profile')); ?>" method="POST">
+                        <?php echo csrf_field(); ?> 
+                        <?php echo method_field('PUT'); ?>
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" name="name" class="form-control premium-input" value="{{ Auth::user()->name }}" required>
+                                <input type="text" name="name" class="form-control premium-input" value="<?php echo e(Auth::user()->name); ?>" required>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" name="email" class="form-control premium-input" value="{{ Auth::user()->email }}" required>
+                                <input type="email" name="email" class="form-control premium-input" value="<?php echo e(Auth::user()->email); ?>" required>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <label class="form-label">Phone Number</label>
-                                <input type="text" name="phone" class="form-control premium-input" value="{{ Auth::user()->phone }}" placeholder="+62 8..." >
+                                <input type="text" name="phone" class="form-control premium-input" value="<?php echo e(Auth::user()->phone); ?>" placeholder="+62 8..." >
                             </div>
                         </div>
                         <div class="mt-2 text-end">
@@ -155,16 +153,16 @@
                 </div>
             </div>
             
-            {{-- Tab Security --}}
+            
             <div class="tab-pane fade" id="security">
                 <div class="premium-card p-4 shadow-sm border-0 rounded-4" style="background: #fff;">
                     <div class="d-flex align-items-center mb-5 pb-3 border-bottom">
                         <i class="bi bi-shield-lock-fill fs-3 text-danger me-3"></i>
                         <h5 class="fw-bold mb-0">Account Security</h5>
                     </div>
-                    <form action="{{ route('admin.settings.password') }}" method="POST">
-                        @csrf 
-                        @method('PUT')
+                    <form action="<?php echo e(route('admin.settings.password')); ?>" method="POST">
+                        <?php echo csrf_field(); ?> 
+                        <?php echo method_field('PUT'); ?>
                         <div class="mb-4">
                             <label class="form-label">Current Password</label>
                             <input type="password" name="current_password" class="form-control premium-input" placeholder="Enter current password" required>
@@ -190,4 +188,5 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Nusantara_id\resources\views/admin/settings.blade.php ENDPATH**/ ?>

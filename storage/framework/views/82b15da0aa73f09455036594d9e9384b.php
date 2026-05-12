@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NusantaraGreen - @yield('title', 'Admin Dashboard')</title>
-    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
+    <title>NusantaraGreen - <?php echo $__env->yieldContent('title', 'Admin Dashboard'); ?></title>
+    <link rel="icon" type="image/png" href="<?php echo e(asset('img/logo.png')); ?>">
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -195,7 +195,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="d-flex align-items-center">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo" style="width: 40px; height: 40px; border-radius: 10px; background: white; padding: 5px;">
+                <img src="<?php echo e(asset('img/logo.png')); ?>" alt="Logo" style="width: 40px; height: 40px; border-radius: 10px; background: white; padding: 5px;">
                 <div class="ms-3 text-white">
                     <h5 class="mb-0 fw-bold">Nusantara</h5>
                     <small class="opacity-50">Administrator</small>
@@ -204,25 +204,25 @@
         </div>
         
         <nav class="sidebar-menu">
-            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.dashboard')); ?>" class="<?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
                 <i class="bi bi-grid-1x2-fill"></i> Overview
             </a>
-            <a href="{{ route('admin.destinations') }}" class="{{ request()->routeIs('admin.destinations*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.destinations')); ?>" class="<?php echo e(request()->routeIs('admin.destinations*') ? 'active' : ''); ?>">
                 <i class="bi bi-pin-map-fill"></i> Destinations
             </a>
-            <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.bookings')); ?>" class="<?php echo e(request()->routeIs('admin.bookings*') ? 'active' : ''); ?>">
                 <i class="bi bi-journal-bookmark-fill"></i> Bookings
             </a>
-            <a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.users')); ?>" class="<?php echo e(request()->routeIs('admin.users*') ? 'active' : ''); ?>">
                 <i class="bi bi-people-fill"></i> Customers
             </a>
-            <a href="{{ route('admin.packages') }}" class="{{ request()->routeIs('admin.packages*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.packages')); ?>" class="<?php echo e(request()->routeIs('admin.packages*') ? 'active' : ''); ?>">
                 <i class="bi bi-box-seam-fill"></i> Packages
             </a>
-            <a href="{{ route('admin.reports') }}" class="{{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.reports')); ?>" class="<?php echo e(request()->routeIs('admin.reports*') ? 'active' : ''); ?>">
                 <i class="bi bi-bar-chart-fill"></i> Analytics
             </a>
-            <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.settings')); ?>" class="<?php echo e(request()->routeIs('admin.settings*') ? 'active' : ''); ?>">
                 <i class="bi bi-gear-fill"></i> Settings
             </a>
             
@@ -230,7 +230,7 @@
                 <small class="text-uppercase text-white-50 fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">Access</small>
             </div>
             
-            <a href="{{ route('home.index') }}" target="_blank">
+            <a href="<?php echo e(route('home.index')); ?>" target="_blank">
                 <i class="bi bi-globe2"></i> Visit Site
             </a>
         </nav>
@@ -239,7 +239,7 @@
             <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();" class="nav-link text-white-50">
                 <i class="bi bi-power me-2"></i> Log Out
             </a>
-            <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+            <form id="logout-form-sidebar" action="<?php echo e(route('logout')); ?>" method="POST" class="d-none"><?php echo csrf_field(); ?></form>
         </div>
     </aside>
 
@@ -252,8 +252,8 @@
                     <i class="bi bi-list"></i>
                 </div>
                 <div>
-                    <h4 class="mb-0 fw-bold" style="color: var(--text-title)">@yield('page-title', 'Dashboard Overview')</h4>
-                    <small class="text-muted">Welcome back, {{ Auth::check() ? Auth::user()->name : 'User' }}</small>
+                    <h4 class="mb-0 fw-bold" style="color: var(--text-title)"><?php echo $__env->yieldContent('page-title', 'Dashboard Overview'); ?></h4>
+                    <small class="text-muted">Welcome back, <?php echo e(Auth::check() ? Auth::user()->name : 'User'); ?></small>
                 </div>
             </div>
             
@@ -266,14 +266,14 @@
                 <div class="dropdown">
                     <div class="d-flex align-items-center gap-3" style="cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false">
                         <div class="text-end d-none d-sm-block">
-                            <p class="mb-0 fw-bold" style="color: var(--text-title); font-size: 0.9rem;">{{ Auth::check() ? Auth::user()->name : 'User' }}</p>
+                            <p class="mb-0 fw-bold" style="color: var(--text-title); font-size: 0.9rem;"><?php echo e(Auth::check() ? Auth::user()->name : 'User'); ?></p>
                             <small class="text-success" style="font-size: 0.75rem;">Admin</small>
                         </div>
-                        <img src="https://ui-avatars.com/api/?name={{ Auth::check() ? Auth::user()->name : 'User' }}&background=198754&color=fff" class="rounded-circle" width="40" height="40">
+                        <img src="https://ui-avatars.com/api/?name=<?php echo e(Auth::check() ? Auth::user()->name : 'User'); ?>&background=198754&color=fff" class="rounded-circle" width="40" height="40">
                     </div>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-3 p-2" style="border-radius: 15px; min-width: 200px;">
                         <li>
-                            <a class="dropdown-item rounded-3 py-2" href="{{ route('admin.settings') }}">
+                            <a class="dropdown-item rounded-3 py-2" href="<?php echo e(route('admin.settings')); ?>">
                                 <i class="bi bi-person me-2"></i>Profile
                             </a>
                         </li>
@@ -284,13 +284,13 @@
                             </a>
                         </li>
                     </ul>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                    <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" class="d-none"><?php echo csrf_field(); ?></form>
                 </div>
             </div>
         </header>
 
         <main class="container-fluid p-0">
-            @yield('content')
+            <?php echo $__env->yieldContent('content'); ?>
         </main>
     </div>
 
@@ -329,6 +329,6 @@
             }
         });
     </script>
-    @yield('scripts')
+    <?php echo $__env->yieldContent('scripts'); ?>
 </body>
-</html>
+</html><?php /**PATH D:\Nusantara_id\resources\views/layouts/admin.blade.php ENDPATH**/ ?>

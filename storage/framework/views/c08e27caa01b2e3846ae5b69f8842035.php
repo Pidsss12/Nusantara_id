@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="bg-success text-white py-5">
     <div class="container text-center">
         <h1 class="display-4 fw-bold mb-3">Paket Edukasi Ekowisata</h1>
@@ -34,13 +32,13 @@
                         <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Transportasi lokal</li>
                         <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Makan siang</li>
                     </ul>
-                    @guest
-                        <a href="{{ route('login') }}" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">
+                    <?php if(auth()->guard()->guest()): ?>
+                        <a href="<?php echo e(route('login')); ?>" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">
                             <i class="bi bi-lock-fill me-2"></i>Login untuk Pesan
                         </a>
-                    @else
-                        <a href="{{ route('booking.education', ['package' => 'pelajar']) }}" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">Pesan Sekarang</a>
-                    @endguest
+                    <?php else: ?>
+                        <a href="<?php echo e(route('booking.education', ['package' => 'pelajar'])); ?>" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">Pesan Sekarang</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -72,13 +70,13 @@
                         <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Sertifikat & laporan penelitian</li>
                         <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Akomodasi & 3x makan</li>
                     </ul>
-                    @guest
-                        <a href="{{ route('login') }}" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">
+                    <?php if(auth()->guard()->guest()): ?>
+                        <a href="<?php echo e(route('login')); ?>" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">
                             <i class="bi bi-lock-fill me-2"></i>Login untuk Pesan
                         </a>
-                    @else
-                        <a href="{{ route('booking.education', ['package' => 'mahasiswa']) }}" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">Pesan Sekarang</a>
-                    @endguest
+                    <?php else: ?>
+                        <a href="<?php echo e(route('booking.education', ['package' => 'mahasiswa'])); ?>" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">Pesan Sekarang</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -107,16 +105,17 @@
                         <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> E-certificate & merchandise</li>
                         <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Penginapan & full board</li>
                     </ul>
-                    @guest
-                        <a href="{{ route('login') }}" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">
+                    <?php if(auth()->guard()->guest()): ?>
+                        <a href="<?php echo e(route('login')); ?>" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">
                             <i class="bi bi-lock-fill me-2"></i>Login untuk Pesan
                         </a>
-                    @else
-                        <a href="{{ route('booking.education', ['package' => 'umum']) }}" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">Pesan Sekarang</a>
-                    @endguest
+                    <?php else: ?>
+                        <a href="<?php echo e(route('booking.education', ['package' => 'umum'])); ?>" class="btn btn-success w-100 rounded-pill py-2 fw-bold mt-3">Pesan Sekarang</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Nusantara_id\resources\views/education.blade.php ENDPATH**/ ?>

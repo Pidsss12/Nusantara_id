@@ -1,8 +1,6 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Destinations'); ?>
 
-@section('title', 'Destinations')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12">
@@ -23,36 +21,36 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="premium-card p-3 bg-white shadow-sm" style="border-radius: 20px;">
-                <form action="{{ route('admin.destinations') }}" method="GET" class="row g-3">
+                <form action="<?php echo e(route('admin.destinations')); ?>" method="GET" class="row g-3">
                     <div class="col-md-4">
-                        <input type="text" name="search" class="form-control border-0 bg-light" placeholder="Search destinations..." value="{{ request('search') }}" style="border-radius: 10px;">
+                        <input type="text" name="search" class="form-control border-0 bg-light" placeholder="Search destinations..." value="<?php echo e(request('search')); ?>" style="border-radius: 10px;">
                     </div>
                     <div class="col-md-2">
                         <select name="province_id" class="form-select border-0 bg-light" style="border-radius: 10px;">
                             <option value="">All Provinces</option>
-                            @foreach($provinces as $province)
-                            <option value="{{ $province->id }}" {{ request('province_id') == $province->id ? 'selected' : '' }}>{{ $province->name }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $provinces; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $province): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($province->id); ?>" <?php echo e(request('province_id') == $province->id ? 'selected' : ''); ?>><?php echo e($province->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <select name="category" class="form-select border-0 bg-light" style="border-radius: 10px;">
                             <option value="">All Categories</option>
-                            @foreach($categories as $cat)
-                            <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($cat); ?>" <?php echo e(request('category') == $cat ? 'selected' : ''); ?>><?php echo e($cat); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <select name="status" class="form-select border-0 bg-light" style="border-radius: 10px;">
                             <option value="">All Status</option>
-                            <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                            <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="Active" <?php echo e(request('status') == 'Active' ? 'selected' : ''); ?>>Active</option>
+                            <option value="Inactive" <?php echo e(request('status') == 'Inactive' ? 'selected' : ''); ?>>Inactive</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex gap-2">
                         <button type="submit" class="btn btn-success flex-grow-1" style="border-radius: 10px;"><i class="bi bi-search"></i></button>
-                        <a href="{{ route('admin.destinations') }}" class="btn btn-outline-secondary" style="border-radius: 10px;"><i class="bi bi-arrow-clockwise"></i></a>
+                        <a href="<?php echo e(route('admin.destinations')); ?>" class="btn btn-outline-secondary" style="border-radius: 10px;"><i class="bi bi-arrow-clockwise"></i></a>
                     </div>
                 </form>
             </div>
@@ -77,62 +75,62 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($destinations as $dest)
+                        <?php $__empty_1 = true; $__currentLoopData = $destinations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dest): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr>
                             <td class="px-4">
-                                <img src="{{ $dest->photo ? asset($dest->photo) : 'https://picsum.photos/seed/' . $dest->slug . '/60/60' }}" class="rounded-3" width="50" height="50" style="object-fit: cover;">
+                                <img src="<?php echo e($dest->photo ? asset($dest->photo) : 'https://picsum.photos/seed/' . $dest->slug . '/60/60'); ?>" class="rounded-3" width="50" height="50" style="object-fit: cover;">
                             </td>
-                            <td class="fw-bold">{{ $dest->name }}</td>
-                            <td>{{ $dest->province->name ?? '-' }}</td>
-                            <td><span class="badge bg-info-subtle text-info rounded-pill px-3">{{ $dest->category }}</span></td>
-                            <td class="fw-medium">Rp {{ number_format($dest->price, 0, ',', '.') }}</td>
-                            <td><span class="text-warning">⭐</span> {{ $dest->rating }}</td>
-                            <td>{{ $dest->bookings_count }}</td>
+                            <td class="fw-bold"><?php echo e($dest->name); ?></td>
+                            <td><?php echo e($dest->province->name ?? '-'); ?></td>
+                            <td><span class="badge bg-info-subtle text-info rounded-pill px-3"><?php echo e($dest->category); ?></span></td>
+                            <td class="fw-medium">Rp <?php echo e(number_format($dest->price, 0, ',', '.')); ?></td>
+                            <td><span class="text-warning">⭐</span> <?php echo e($dest->rating); ?></td>
+                            <td><?php echo e($dest->bookings_count); ?></td>
                             <td>
-                                <span class="badge rounded-pill px-3 bg-{{ $dest->status == 'Active' ? 'success' : 'secondary' }}">{{ $dest->status }}</span>
+                                <span class="badge rounded-pill px-3 bg-<?php echo e($dest->status == 'Active' ? 'success' : 'secondary'); ?>"><?php echo e($dest->status); ?></span>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <button class="btn btn-sm btn-light text-primary mx-1 rounded" data-bs-toggle="modal" data-bs-target="#viewModal{{ $dest->id }}"><i class="bi bi-eye"></i></button>
-                                    <button class="btn btn-sm btn-light text-success mx-1 rounded" data-bs-toggle="modal" data-bs-target="#editModal{{ $dest->id }}"><i class="bi bi-pencil"></i></button>
-                                    <form action="{{ route('admin.destinations.destroy', $dest) }}" method="POST" style="display:inline;" class="delete-form">
-                                        @csrf @method('DELETE')
+                                    <button class="btn btn-sm btn-light text-primary mx-1 rounded" data-bs-toggle="modal" data-bs-target="#viewModal<?php echo e($dest->id); ?>"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-light text-success mx-1 rounded" data-bs-toggle="modal" data-bs-target="#editModal<?php echo e($dest->id); ?>"><i class="bi bi-pencil"></i></button>
+                                    <form action="<?php echo e(route('admin.destinations.destroy', $dest)); ?>" method="POST" style="display:inline;" class="delete-form">
+                                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                         <button type="button" class="btn btn-sm btn-light text-danger mx-1 rounded btn-delete"><i class="bi bi-trash"></i></button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
 
-                        <div class="modal fade" id="viewModal{{ $dest->id }}" tabindex="-1">
+                        <div class="modal fade" id="viewModal<?php echo e($dest->id); ?>" tabindex="-1">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content rounded-4 border-0">
                                     <div class="modal-header bg-success text-white border-0">
-                                        <h5 class="modal-title fw-bold">{{ $dest->name }}</h5>
+                                        <h5 class="modal-title fw-bold"><?php echo e($dest->name); ?></h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body p-4">
                                         <div class="row">
                                             <div class="col-md-5">
-                                                <img src="{{ $dest->photo ? asset($dest->photo) : 'https://picsum.photos/seed/' . $dest->slug . '/400/300' }}" class="img-fluid rounded-4 shadow-sm">
+                                                <img src="<?php echo e($dest->photo ? asset($dest->photo) : 'https://picsum.photos/seed/' . $dest->slug . '/400/300'); ?>" class="img-fluid rounded-4 shadow-sm">
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="mb-3">
                                                     <label class="text-muted small text-uppercase fw-bold">Location</label>
-                                                    <p class="mb-0 fw-medium">{{ $dest->location }}, {{ $dest->province->name ?? '-' }}</p>
+                                                    <p class="mb-0 fw-medium"><?php echo e($dest->location); ?>, <?php echo e($dest->province->name ?? '-'); ?></p>
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-6">
                                                         <label class="text-muted small text-uppercase fw-bold">Price</label>
-                                                        <p class="mb-0 fw-bold text-success">Rp {{ number_format($dest->price, 0, ',', '.') }}</p>
+                                                        <p class="mb-0 fw-bold text-success">Rp <?php echo e(number_format($dest->price, 0, ',', '.')); ?></p>
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="text-muted small text-uppercase fw-bold">Quota</label>
-                                                        <p class="mb-0 fw-medium">{{ $dest->quota_per_day }} / day</p>
+                                                        <p class="mb-0 fw-medium"><?php echo e($dest->quota_per_day); ?> / day</p>
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <label class="text-muted small text-uppercase fw-bold">Description</label>
-                                                    <p class="mb-0 text-muted small" style="text-align: justify;">{{ $dest->description }}</p>
+                                                    <p class="mb-0 text-muted small" style="text-align: justify;"><?php echo e($dest->description); ?></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -141,11 +139,11 @@
                             </div>
                         </div>
 
-                        <div class="modal fade" id="editModal{{ $dest->id }}" tabindex="-1">
+                        <div class="modal fade" id="editModal<?php echo e($dest->id); ?>" tabindex="-1">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content rounded-4 border-0">
-                                    <form action="{{ route('admin.destinations.update', $dest) }}" method="POST" enctype="multipart/form-data">
-                                        @csrf @method('PUT')
+                                    <form action="<?php echo e(route('admin.destinations.update', $dest)); ?>" method="POST" enctype="multipart/form-data">
+                                        <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
                                         <div class="modal-header bg-primary text-white border-0">
                                             <h5 class="modal-title fw-bold">Edit Destination</h5>
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -154,38 +152,38 @@
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-bold">Destination Name</label>
-                                                    <input type="text" name="name" class="form-control" value="{{ $dest->name }}" required>
+                                                    <input type="text" name="name" class="form-control" value="<?php echo e($dest->name); ?>" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-bold">Province</label>
                                                     <select name="province_id" class="form-select" required>
-                                                        @foreach($provinces as $province)
-                                                        <option value="{{ $province->id }}" {{ $dest->province_id == $province->id ? 'selected' : '' }}>{{ $province->name }}</option>
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $provinces; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $province): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($province->id); ?>" <?php echo e($dest->province_id == $province->id ? 'selected' : ''); ?>><?php echo e($province->name); ?></option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label fw-bold">Category</label>
                                                     <select name="category" class="form-select" required>
-                                                        @foreach($categories as $cat)
-                                                        <option value="{{ $cat }}" {{ $dest->category == $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($cat); ?>" <?php echo e($dest->category == $cat ? 'selected' : ''); ?>><?php echo e($cat); ?></option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label fw-bold">Price (Rp)</label>
-                                                    <input type="number" name="price" class="form-control" value="{{ $dest->price }}" required>
+                                                    <input type="number" name="price" class="form-control" value="<?php echo e($dest->price); ?>" required>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label fw-bold">Status</label>
                                                     <select name="status" class="form-select">
-                                                        <option value="Active" {{ $dest->status == 'Active' ? 'selected' : '' }}>Active</option>
-                                                        <option value="Inactive" {{ $dest->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                                        <option value="Active" <?php echo e($dest->status == 'Active' ? 'selected' : ''); ?>>Active</option>
+                                                        <option value="Inactive" <?php echo e($dest->status == 'Inactive' ? 'selected' : ''); ?>>Inactive</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="form-label fw-bold">Description</label>
-                                                    <textarea name="description" class="form-control" rows="3" required>{{ $dest->description }}</textarea>
+                                                    <textarea name="description" class="form-control" rows="3" required><?php echo e($dest->description); ?></textarea>
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="form-label fw-bold">Update Photo</label>
@@ -201,31 +199,32 @@
                                 </div>
                             </div>
                         </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="9" class="text-center py-5 text-muted">
                                 <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
                                 No destinations found
                             </td>
                         </tr>
-                        @endforelse
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-        @if($destinations->hasPages())
+        <?php if($destinations->hasPages()): ?>
         <div class="card-footer bg-white border-0 py-3">
-            {{ $destinations->appends(request()->query())->links() }}
+            <?php echo e($destinations->appends(request()->query())->links()); ?>
+
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
 
 <div class="modal fade" id="addDestinationModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content rounded-4 border-0">
-            <form action="{{ route('admin.destinations.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <form action="<?php echo e(route('admin.destinations.store')); ?>" method="POST" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
                 <div class="modal-header bg-success text-white border-0">
                     <h5 class="modal-title fw-bold">Add New Destination</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -240,17 +239,17 @@
                             <label class="form-label fw-bold">Province</label>
                             <select name="province_id" class="form-select" required>
                                 <option value="">Select Province</option>
-                                @foreach($provinces as $province)
-                                <option value="{{ $province->id }}">{{ $province->name }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $provinces; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $province): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($province->id); ?>"><?php echo e($province->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Category</label>
                             <select name="category" class="form-select" required>
-                                @foreach($categories as $cat)
-                                <option value="{{ $cat }}">{{ $cat }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($cat); ?>"><?php echo e($cat); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -283,9 +282,9 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
+<?php $__env->startSection('scripts'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.btn-delete');
@@ -316,4 +315,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Nusantara_id\resources\views/admin/destinations.blade.php ENDPATH**/ ?>

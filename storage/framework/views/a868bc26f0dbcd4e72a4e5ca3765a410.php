@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <style>
     .error-bubble {
         position: absolute;
@@ -43,26 +41,26 @@
 <div class="container py-5">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-success text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $destination->name }}</li>
+            <li class="breadcrumb-item"><a href="<?php echo e(url('/')); ?>" class="text-success text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><?php echo e($destination->name); ?></li>
         </ol>
     </nav>
 
     <div class="row">
         <div class="col-lg-8 mb-4">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                <img src="{{ $destination->photo ?? 'https://picsum.photos/seed/' . $destination->slug . '/1200/600' }}" class="img-fluid w-100" style="object-fit: cover; height: 500px;" alt="{{ $destination->name }}">
+                <img src="<?php echo e($destination->photo ?? 'https://picsum.photos/seed/' . $destination->slug . '/1200/600'); ?>" class="img-fluid w-100" style="object-fit: cover; height: 500px;" alt="<?php echo e($destination->name); ?>">
             </div>
             
             <div class="mt-4">
-                <h1 class="fw-bold text-success">{{ $destination->name }}</h1>
+                <h1 class="fw-bold text-success"><?php echo e($destination->name); ?></h1>
                 <div class="d-flex align-items-center mb-3">
-                    <span class="badge bg-success me-2"><i class="bi bi-geo-alt-fill"></i> {{ $destination->location ?? 'Indonesia' }}</span>
-                    <span class="text-warning"><i class="bi bi-star-fill"></i> {{ $destination->rating ?? 4.5 }} / 5.0</span>
+                    <span class="badge bg-success me-2"><i class="bi bi-geo-alt-fill"></i> <?php echo e($destination->location ?? 'Indonesia'); ?></span>
+                    <span class="text-warning"><i class="bi bi-star-fill"></i> <?php echo e($destination->rating ?? 4.5); ?> / 5.0</span>
                 </div>
                 
                 <h4 class="fw-bold mt-4">Deskripsi</h4>
-                <p class="text-muted" style="line-height: 1.8;">{{ $destination->description }}</p>
+                <p class="text-muted" style="line-height: 1.8;"><?php echo e($destination->description); ?></p>
 
                 <h4 class="fw-bold mt-4">Fasilitas</h4>
                 <div class="row g-3 mt-1 text-muted">
@@ -79,14 +77,14 @@
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3">Pesan Sekarang</h5>
                     <h2 class="text-success fw-bold mb-4">
-                        Rp {{ number_format($destination->price, 0, ',', '.') }} 
+                        Rp <?php echo e(number_format($destination->price, 0, ',', '.')); ?> 
                         <small class="fs-6 text-muted fw-normal">/ tiket</small>
                     </h2>
                     
-                    @auth
-                    <form action="{{ route('booking.store') }}" method="POST" id="bookingForm" novalidate>
-                        @csrf
-                        <input type="hidden" name="destination_id" value="{{ $destination->id }}">
+                    <?php if(auth()->guard()->check()): ?>
+                    <form action="<?php echo e(route('booking.store')); ?>" method="POST" id="bookingForm" novalidate>
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="destination_id" value="<?php echo e($destination->id); ?>">
                         
                         <div class="mb-4 input-wrapper">
                             <label class="form-label small fw-bold text-muted">JUMLAH PESERTA</label>
@@ -97,12 +95,12 @@
                         <div class="row">
                             <div class="col-md-6 mb-4 input-wrapper">
                                 <label class="form-label small fw-bold text-muted">TANGGAL MULAI</label>
-                                <input type="date" name="start_date" id="startDate" class="form-control rounded-3" min="{{ date('Y-m-d') }}" required>
+                                <input type="date" name="start_date" id="startDate" class="form-control rounded-3" min="<?php echo e(date('Y-m-d')); ?>" required>
                                 <div class="error-bubble" id="err-startDate">✖ Pilih tanggal</div>
                             </div>
                             <div class="col-md-6 mb-4 input-wrapper">
                                 <label class="form-label small fw-bold text-muted">TANGGAL AKHIR</label>
-                                <input type="date" name="end_date" id="endDate" class="form-control rounded-3" min="{{ date('Y-m-d') }}" required>
+                                <input type="date" name="end_date" id="endDate" class="form-control rounded-3" min="<?php echo e(date('Y-m-d')); ?>" required>
                                 <div class="error-bubble" id="err-endDate">✖ Pilih tanggal</div>
                             </div>
                         </div>
@@ -178,13 +176,13 @@
                             <i class="bi bi-cart-check me-2"></i>Pesan Sekarang
                         </button>
                     </form>
-                    @else
+                    <?php else: ?>
                     <div class="text-center py-4 text-muted">
                         <i class="bi bi-person-lock fs-1 mb-3 d-block"></i>
                         <p>Silakan login untuk memesan</p>
-                        <a href="{{ route('login') }}" class="btn btn-success w-100 rounded-pill fw-bold">Login</a>
+                        <a href="<?php echo e(route('login')); ?>" class="btn btn-success w-100 rounded-pill fw-bold">Login</a>
                     </div>
-                    @endauth
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -228,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
     };
 
-    const basePrice = {{ $destination->price }};
+    const basePrice = <?php echo e($destination->price); ?>;
 
     function formatRupiah(num) {
         return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -327,4 +325,5 @@ document.addEventListener('DOMContentLoaded', function() {
     calculateTotal();
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Nusantara_id\resources\views/destinations/show.blade.php ENDPATH**/ ?>
