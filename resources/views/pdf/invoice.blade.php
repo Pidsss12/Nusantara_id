@@ -4,223 +4,163 @@
     <meta charset="utf-8">
     <title>Invoice {{ $booking->invoice_code }}</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; font-size: 12px; color: #333; }
-        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
+        body { font-family: 'Helvetica', 'Arial', sans-serif; color: #2d3436; margin: 0; padding: 0; }
+        .header { position: relative; height: 150px; }
+        .curve-bg { position: absolute; top: 0; right: 0; width: 60%; height: 130px; background: #198754; border-radius: 0 0 0 100px; }
+        .curve-bg-dark { position: absolute; top: 0; right: 0; width: 55%; height: 110px; background: #2d3436; border-radius: 0 0 0 100px; }
         
-        /* Header */
-        .header { 
-            background: linear-gradient(135deg, #198754 0%, #20c997 100%); 
-            color: white; 
-            padding: 20px; 
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .header-content { display: flex; align-items: center; }
-        .logo-box { 
-            background: white; 
-            border-radius: 50%; 
-            padding: 5px; 
-            margin-right: 15px;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-        }
-        .logo-box img { width: 50px; height: 50px; }
-        .header-text h1 { font-size: 24px; margin-bottom: 5px; }
-        .header-text small { opacity: 0.8; }
-        .status-badge { 
-            float: right; 
-            background: white; 
-            color: #198754; 
-            padding: 8px 15px; 
-            border-radius: 20px; 
-            font-weight: bold;
-            font-size: 11px;
-        }
+        .logo-text { position: absolute; top: 30px; right: 30px; color: white; text-align: right; }
+        .logo-text h2 { margin: 0; font-size: 24px; letter-spacing: 2px; }
+        .logo-text small { font-size: 10px; text-transform: uppercase; }
+
+        .invoice-title { position: absolute; top: 30px; left: 30px; }
+        .invoice-title h1 { margin: 0; font-size: 40px; color: #2d3436; }
         
-        /* Info boxes */
-        .info-row { display: table; width: 100%; margin-bottom: 20px; }
-        .info-box { 
-            display: table-cell; 
-            width: 48%; 
-            background: #f8f9fa; 
-            padding: 15px; 
-            border-radius: 8px;
-        }
-        .info-box:first-child { margin-right: 4%; }
-        .info-box h4 { color: #198754; font-size: 11px; margin-bottom: 8px; }
-        .info-box h3 { font-size: 14px; margin-bottom: 5px; }
-        .info-box p { font-size: 11px; color: #666; line-height: 1.6; }
+        .info-table { margin-top: 10px; font-size: 12px; }
+        .info-table td { padding: 2px 0; }
+
+        .content { padding: 30px; }
+        .user-info { margin-bottom: 30px; width: 100%; }
+        .user-info td { vertical-align: top; }
         
-        /* Grid info */
-        .grid-info { display: table; width: 100%; margin-bottom: 20px; }
-        .grid-item { 
-            display: table-cell; 
-            width: 25%; 
-            border: 1px solid #ddd; 
-            padding: 10px; 
-            text-align: center;
-        }
-        .grid-item small { display: block; color: #999; font-size: 10px; margin-bottom: 3px; }
-        .grid-item strong { font-size: 11px; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .table th { background: #198754; color: white; text-align: left; padding: 12px; font-size: 13px; border: none; }
+        .table td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
         
-        /* Table */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th { background: #198754; color: white; padding: 10px; text-align: left; font-size: 11px; }
-        td { border: 1px solid #ddd; padding: 10px; font-size: 11px; }
-        .text-end { text-align: right; }
-        .text-center { text-align: center; }
-        tfoot th { background: #198754; color: white; }
+        .summary { width: 100%; margin-top: 30px; }
+        .summary td { padding: 5px 0; }
+        .total-row { color: #198754; font-weight: bold; font-size: 18px; border-top: 1px solid #198754; }
+
+        .footer-info { margin-top: 50px; width: 100%; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+        .footer-info td { vertical-align: middle; }
+
+        .footer-curve { position: fixed; bottom: 0; width: 100%; height: 50px; background: #198754; border-radius: 100px 0 0 0; }
+        .footer-curve-dark { position: fixed; bottom: 0; width: 100%; height: 40px; background: #2d3436; border-radius: 100px 0 0 0; }
         
-        /* Payment section */
-        .payment-box {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .payment-content { display: table; width: 100%; }
-        .payment-left { display: table-cell; width: 65%; vertical-align: top; }
-        .payment-right { display: table-cell; width: 35%; text-align: center; vertical-align: middle; }
-        .payment-box h4 { font-size: 13px; margin-bottom: 10px; color: #856404; }
-        .payment-box p { font-size: 11px; margin: 3px 0; }
-        .qr-code { max-width: 100px; height: auto; }
-        
-        /* Footer */
-        .footer { 
-            text-align: center; 
-            margin-top: 30px; 
-            padding-top: 15px; 
-            border-top: 1px solid #ddd;
-            font-size: 10px;
-            color: #999;
-        }
+        .signature { margin-top: 30px; text-align: right; }
+        .signature-img { height: 40px; opacity: 0.5; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <div class="logo-box">
-                    <img src="{{ public_path('img/logo.png') }}" alt="Logo">
-                </div>
-                <div class="header-text">
-                    <h1>NusantaraGreen</h1>
-                    <small>INVOICE {{ $booking->invoice_code }}</small>
-                </div>
-                <div class="status-badge">
-                    {{ $booking->payment_status == 'Unpaid' ? 'BELUM BAYAR' : ($booking->payment_status == 'Pending' ? 'MENUNGGU' : 'LUNAS') }}
-                </div>
-            </div>
+    <div class="header">
+        <div class="curve-bg"></div>
+        <div class="curve-bg-dark"></div>
+        <div class="logo-text">
+            <h2>EKOWISATA</h2>
+            <small>Portal Wisata Indonesia</small>
         </div>
-        
-        <!-- From & To -->
-        <div class="info-row">
-            <div class="info-box">
-                <h4>DARI</h4>
-                <h3>NusantaraGreen</h3>
-                <p>
-                    Jl. Kebon Jeruk No. 123<br>
-                    Jakarta Selatan 12210<br>
-                    info@nusantaragreen.com<br>
-                    +62 21 1234 5678
-                </p>
-            </div>
-            <div class="info-box">
-                <h4>KEPADA</h4>
-                <h3>{{ $booking->customer_name }}</h3>
-                <p>
-                    {{ $booking->customer_email }}<br>
-                    {{ $booking->customer_phone ?? '-' }}<br>
-                    @if($booking->institution){{ $booking->institution }}@endif
-                </p>
-            </div>
+        <div class="invoice-title">
+            <h1>INVOICE</h1>
+            <table class="info-table">
+                <tr>
+                    <td width="80">Account No</td>
+                    <td width="10">:</td>
+                    <td><strong>{{ $booking->user_id }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Invoice No</td>
+                    <td>:</td>
+                    <td><strong style="color: #198754;">{{ $booking->invoice_code }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Invoice Date</td>
+                    <td>:</td>
+                    <td><strong>{{ $booking->invoice_date ? $booking->invoice_date->format('d M Y') : now()->format('d M Y') }}</strong></td>
+                </tr>
+            </table>
         </div>
-        
-        <!-- Grid Info -->
-        <div class="grid-info">
-            <div class="grid-item">
-                <small>Tanggal Invoice</small>
-                <strong>{{ $booking->invoice_date ? $booking->invoice_date->format('d/m/Y') : now()->format('d/m/Y') }}</strong>
-            </div>
-            <div class="grid-item">
-                <small>Kode Booking</small>
-                <strong>{{ $booking->booking_code }}</strong>
-            </div>
-            <div class="grid-item">
-                <small>Tanggal Kunjungan</small>
-                <strong>{{ $booking->visit_date->format('d/m/Y') }}</strong>
-            </div>
-            <div class="grid-item">
-                <small>Jumlah Peserta</small>
-                <strong>{{ $booking->participants }} orang</strong>
-            </div>
-        </div>
-        
-        <!-- Items Table -->
-        <table>
+    </div>
+
+    <div class="content">
+        <table class="user-info">
+            <tr>
+                <td width="50%">
+                    <small style="color: #636e72; font-weight: bold; text-transform: uppercase; font-size: 10px;">Pelanggan:</small>
+                    <h3 style="margin: 5px 0 0 0;">{{ $booking->customer_name }}</h3>
+                    <div style="font-size: 12px; color: #636e72; margin-top: 5px;">
+                        {{ $booking->customer_email }}<br>
+                        {{ $booking->customer_phone ?? '-' }}
+                    </div>
+                </td>
+                <td width="50%" align="right">
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; display: inline-block; text-align: left;">
+                        <small style="color: #636e72; font-weight: bold; text-transform: uppercase; font-size: 10px;">Status Pembayaran:</small><br>
+                        <strong style="color: {{ $booking->payment_status == 'Paid' ? '#198754' : '#f39c12' }};">
+                            {{ $booking->payment_status == 'Unpaid' ? 'BELUM BAYAR' : ($booking->payment_status == 'Pending' ? 'MENUNGGU VERIFIKASI' : 'LUNAS') }}
+                        </strong>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table">
             <thead>
                 <tr>
-                    <th>Deskripsi</th>
-                    <th class="text-center" width="60">Qty</th>
-                    <th class="text-end" width="120">Harga</th>
-                    <th class="text-end" width="120">Total</th>
+                    <th width="40">SL</th>
+                    <th>Item Description</th>
+                    <th width="100" align="center">Price</th>
+                    <th width="60" align="center">Qty</th>
+                    <th width="120" align="right">Total</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
+                    <td align="center">1</td>
                     <td>
-                        <strong>{{ $booking->destination->name ?? 'Destinasi' }}</strong><br>
-                        <small style="color: #666;">
-                            @if($booking->package)Paket: {{ $booking->package->name }} | @endif
-                            {{ $booking->visit_date->format('d M Y') }}
-                        </small>
+                        <strong>{{ $booking->destination->name }}</strong><br>
+                        <small style="color: #636e72;">{{ $booking->visit_date->format('d F Y') }}</small>
+                        @if($booking->notes)
+                            <div style="font-size: 10px; color: #636e72; margin-top: 8px; border-top: 1px solid #eee; padding-top: 5px;">
+                                {!! nl2br(e($booking->notes)) !!}
+                            </div>
+                        @endif
                     </td>
-                    <td class="text-center">{{ $booking->participants }}</td>
-                    <td class="text-end">Rp {{ number_format($booking->total_amount / $booking->participants, 0, ',', '.') }}</td>
-                    <td class="text-end"><strong>Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</strong></td>
+                    <td align="center">Rp {{ number_format($booking->total_amount / $booking->participants, 0, ',', '.') }}</td>
+                    <td align="center">{{ $booking->participants }}</td>
+                    <td align="right"><strong>Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</strong></td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="3" class="text-end">Subtotal</th>
-                    <th class="text-end">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</th>
-                </tr>
-                <tr>
-                    <th colspan="3" class="text-end" style="font-size: 14px;">TOTAL PEMBAYARAN</th>
-                    <th class="text-end" style="font-size: 16px;">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</th>
-                </tr>
-            </tfoot>
         </table>
-        
-        <!-- Payment Instructions -->
-        @if($booking->payment_status == 'Unpaid')
-        <div class="payment-box">
-            <div class="payment-content">
-                <div class="payment-left">
-                    <h4>INSTRUKSI PEMBAYARAN</h4>
-                    <p><strong>Bank BCA:</strong> 1234567890</p>
-                    <p><strong>Bank Mandiri:</strong> 0987654321</p>
-                    <p><strong>Bank BNI:</strong> 1122334455</p>
-                    <p style="margin-top: 10px;"><small>a.n. PT Nusantara Green</small></p>
-                    <p style="margin-top: 10px; font-weight: bold;">Cantumkan kode invoice: {{ $booking->invoice_code }}</p>
-                </div>
-                <div class="payment-right">
-                    <img src="{{ public_path('img/qr-payment.png') }}" alt="QR Payment" class="qr-code">
-                    <p style="font-size: 10px; margin-top: 5px;">Scan untuk bayar</p>
-                </div>
-            </div>
+
+        <table class="summary" align="right">
+            <tr>
+                <td width="60%" align="right" style="color: #636e72; font-size: 13px;">Subtotal</td>
+                <td width="40%" align="right" style="font-size: 13px; font-weight: bold;">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td align="right" style="color: #636e72; font-size: 13px;">Tax Rate (0%)</td>
+                <td align="right" style="font-size: 13px; font-weight: bold;">Rp 0</td>
+            </tr>
+            <tr class="total-row">
+                <td align="right" style="padding-top: 10px;">TOTAL</td>
+                <td align="right" style="padding-top: 10px;">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
+            </tr>
+        </table>
+
+        <div class="signature">
+            <h4 style="margin: 0; font-weight: bold;">Admin Ekowisata</h4>
+            <small style="color: #636e72;">Manager</small>
         </div>
-        @endif
-        
-        <!-- Footer -->
-        <div class="footer">
-            <p><strong>NusantaraGreen</strong> - Jelajahi keindahan alam Indonesia dengan bertanggung jawab 🌿</p>
-            <p style="margin-top: 5px;">Email: support@nusantaragreen.com | WhatsApp: +62 812-3456-7890</p>
-        </div>
+
+        <table class="footer-info">
+            <tr>
+                <td width="60%">
+                    <h4 style="color: #198754; margin: 0; font-size: 14px;">GET IN TOUCH</h4>
+                    <div style="font-size: 11px; color: #636e72; margin-top: 5px;">
+                        Jl. Kebon Jeruk No. 123, Jakarta Selatan<br>
+                        +62 812-3456-7890 | info@ekowisata.id
+                    </div>
+                </td>
+                <td width="40%" align="right">
+                    <p style="font-size: 10px; color: #636e72; font-style: italic;">
+                        Note: Harap simpan invoice ini sebagai bukti pemesanan yang sah.
+                    </p>
+                </td>
+            </tr>
+        </table>
     </div>
+
+    <div class="footer-curve"></div>
+    <div class="footer-curve-dark"></div>
 </body>
 </html>

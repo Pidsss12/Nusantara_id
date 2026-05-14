@@ -328,6 +328,25 @@
                 document.getElementById('sidebar').classList.remove('show');
             }
         });
+
+        // SweetAlert for Session Messages
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "{{ session('error') }}",
+            });
+        @endif
     </script>
     @yield('scripts')
 </body>

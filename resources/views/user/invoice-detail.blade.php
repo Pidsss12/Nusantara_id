@@ -22,174 +22,157 @@
 <div class="row g-4">
     <!-- Invoice Card -->
     <div class="col-lg-8">
-        <div class="premium-card overflow-hidden" id="invoice-printable">
-            <!-- Header -->
-            <div class="p-5" style="background: linear-gradient(135deg, #198754 0%, #115e3b 100%);">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <div class="bg-white rounded-4 p-2 shadow-sm">
-                            <img src="{{ asset('img/logo.png') }}" alt="Logo" style="width: 50px; height: 50px;">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden" id="invoice-printable">
+            <!-- Header Section with Curved Design (Like Screenshot) -->
+            <div style="position: relative; background: #fff; height: 160px;">
+                <!-- Right Side Curve (Blue/Grey) -->
+                <div style="position: absolute; top: 0; right: 0; width: 60%; height: 140px; background: #2d3436; border-bottom-left-radius: 80% 100%; z-index: 1;"></div>
+                <div style="position: absolute; top: 0; right: 0; width: 55%; height: 120px; background: #198754; border-bottom-left-radius: 80% 100%; z-index: 2;"></div>
+                
+                <!-- Logo area in the curve -->
+                <div style="position: absolute; top: 30px; right: 40px; z-index: 3; text-align: right; color: white;">
+                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+                        <div style="background: white; width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px;">
+                            <img src="{{ asset('img/logo.png') }}" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div style="text-align: left;">
+                            <h4 class="fw-bold mb-0" style="letter-spacing: 1px;">EKOWISATA</h4>
+                            <small style="font-size: 10px; opacity: 0.9; text-transform: uppercase;">Portal Wisata Indonesia</small>
                         </div>
                     </div>
-                    <div class="col text-white">
-                        <h3 class="fw-bold mb-0">INVOICE</h3>
-                        <p class="opacity-75 mb-0" style="letter-spacing: 2px;">{{ $booking->invoice_code }}</p>
-                    </div>
-                    <div class="col-auto">
-                        <div class="bg-white bg-opacity-10 backdrop-blur rounded-pill px-4 py-2 border border-white border-opacity-20 text-white">
-                            {{ $booking->payment_status == 'Unpaid' ? 'Belum Bayar' : ($booking->payment_status == 'Pending' ? 'Menunggu' : 'Lunas') }}
-                        </div>
+                </div>
+
+                <!-- Left Side: Invoice Label -->
+                <div style="position: absolute; top: 40px; left: 40px; z-index: 3;">
+                    <h1 class="fw-bold mb-0" style="color: #2d3436; font-size: 2.5rem;">INVOICE</h1>
+                    <div class="mt-2">
+                        <table style="font-size: 13px; color: #636e72;">
+                            <tr>
+                                <td width="100">Account No</td>
+                                <td width="15">:</td>
+                                <td class="fw-bold">{{ Auth::id() }}</td>
+                            </tr>
+                            <tr>
+                                <td>Invoice No</td>
+                                <td>:</td>
+                                <td class="fw-bold text-success">{{ $booking->invoice_code }}</td>
+                            </tr>
+                            <tr>
+                                <td>Invoice Date</td>
+                                <td>:</td>
+                                <td class="fw-bold">{{ $booking->invoice_date ? $booking->invoice_date->format('d M Y') : now()->format('d M Y') }}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
             
-            <!-- Body -->
-            <div class="p-4">
-                <!-- From & To -->
-                <div class="row g-3 mb-4">
+            <!-- Body Content -->
+            <div class="card-body px-5 pb-5">
+                <!-- User Info -->
+                <div class="row mb-5">
                     <div class="col-md-6">
-                        <div class="bg-light rounded-3 p-3 h-100">
-                            <small class="text-success fw-bold">DARI</small>
-                            <h6 class="fw-bold mt-1 mb-1">NusantaraGreen</h6>
-                            <small class="text-muted">
-                                Jl. Kebon Jeruk No. 123<br>
-                                Jakarta Selatan 12210<br>
-                                info@nusantaragreen.com
-                            </small>
-                        </div>
+                        <small class="text-uppercase fw-bold text-muted mb-2 d-block" style="font-size: 11px;">Pelanggan:</small>
+                        <h5 class="fw-bold mb-1">{{ $booking->customer_name }}</h5>
+                        <p class="text-muted small mb-0">{{ $booking->customer_email }}</p>
+                        <p class="text-muted small">{{ $booking->customer_phone ?? '-' }}</p>
                     </div>
-                    <div class="col-md-6">
-                        <div class="bg-light rounded-3 p-3 h-100">
-                            <small class="text-success fw-bold">KEPADA</small>
-                            <h6 class="fw-bold mt-1 mb-1">{{ $booking->customer_name }}</h6>
-                            <small class="text-muted">
-                                {{ $booking->customer_email }}<br>
-                                {{ $booking->customer_phone ?? '-' }}
-                                @if($booking->institution)<br>{{ $booking->institution }}@endif
-                            </small>
+                    <div class="col-md-6 text-md-end">
+                        <div class="d-inline-block text-start p-3 rounded-4 bg-light">
+                            <small class="text-uppercase fw-bold text-muted mb-2 d-block" style="font-size: 11px;">Status Pembayaran:</small>
+                            <span class="badge rounded-pill {{ $booking->payment_status == 'Paid' ? 'bg-success' : 'bg-warning text-dark' }} px-3 py-2">
+                                {{ $booking->payment_status == 'Unpaid' ? 'BELUM BAYAR' : ($booking->payment_status == 'Pending' ? 'MENUNGGU VERIFIKASI' : 'LUNAS') }}
+                            </span>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Info Grid -->
-                <div class="row g-2 mb-4">
-                    <div class="col-6 col-md-3">
-                        <div class="border rounded-3 p-2 text-center">
-                            <small class="text-muted d-block">Invoice</small>
-                            <small class="fw-bold">{{ $booking->invoice_date ? $booking->invoice_date->format('d/m/Y') : now()->format('d/m/Y') }}</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="border rounded-3 p-2 text-center">
-                            <small class="text-muted d-block">Booking</small>
-                            <small class="fw-bold">{{ $booking->booking_code }}</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="border rounded-3 p-2 text-center">
-                            <small class="text-muted d-block">Kunjungan</small>
-                            <small class="fw-bold">{{ $booking->visit_date->format('d/m/Y') }}</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="border rounded-3 p-2 text-center">
-                            <small class="text-muted d-block">Peserta</small>
-                            <small class="fw-bold">{{ $booking->participants }} orang</small>
+
+                <!-- Table Header Styled like Screenshot -->
+                <div class="table-responsive">
+                    <table class="table mb-4">
+                        <thead>
+                            <tr style="background: #198754; color: white;">
+                                <th class="py-3 ps-4 border-0 rounded-start" width="60">SL</th>
+                                <th class="py-3 border-0">Item Description</th>
+                                <th class="py-3 border-0 text-center">Price</th>
+                                <th class="py-3 border-0 text-center">Qty</th>
+                                <th class="py-3 pe-4 border-0 text-end rounded-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0">
+                            <tr>
+                                <td class="ps-4 py-4 text-center">1</td>
+                                <td class="py-4">
+                                    <h6 class="fw-bold mb-1">{{ $booking->destination->name }}</h6>
+                                    <small class="text-muted d-block">{{ $booking->visit_date->format('d F Y') }}</small>
+                                    @if($booking->notes)
+                                        <div class="mt-2 p-2 bg-light rounded-3 small text-muted" style="font-size: 11px; white-space: pre-line;">
+                                            {{ $booking->notes }}
+                                        </div>
+                                    @endif
+                                </td>
+                                <td class="py-4 text-center align-middle">Rp {{ number_format($booking->total_amount / $booking->participants, 0, ',', '.') }}</td>
+                                <td class="py-4 text-center align-middle">{{ $booking->participants }}</td>
+                                <td class="pe-4 py-4 text-end align-middle fw-bold">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Summary Section -->
+                <div class="row justify-content-end">
+                    <div class="col-md-5">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td class="text-end text-muted">Subtotal</td>
+                                <td class="text-end fw-bold" width="150">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-end text-muted">Tax Rate (0%)</td>
+                                <td class="text-end fw-bold">Rp 0</td>
+                            </tr>
+                            <tr class="border-top">
+                                <td class="text-end text-success fw-bold fs-5">TOTAL</td>
+                                <td class="text-end text-success fw-bold fs-5">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
+                            </tr>
+                        </table>
+
+                        <!-- Signature simulation from screenshot -->
+                        <div class="text-center mt-5 pt-3">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Jon_Snow_Signature.png" style="height: 40px; opacity: 0.6; filter: grayscale(1) brightness(0.5);">
+                            <h6 class="fw-bold mb-0 mt-2">Admin Ekowisata</h6>
+                            <small class="text-muted">Manager</small>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Items -->
-                <table class="table table-bordered mb-4">
-                    <thead class="table-success">
-                        <tr>
-                            <th>Deskripsi</th>
-                            <th class="text-center" width="80">Qty</th>
-                            <th class="text-end" width="130">Harga</th>
-                            <th class="text-end" width="130">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <strong>{{ $booking->destination->name ?? 'Destinasi' }}</strong><br>
-                                <small class="text-muted">
-                                    @if($booking->package) Paket: {{ $booking->package->name }} | @endif
-                                    {{ $booking->visit_date->format('d M Y') }}
-                                </small>
-                            </td>
-                            <td class="text-center align-middle">{{ $booking->participants }}</td>
-                            <td class="text-end align-middle">Rp {{ number_format($booking->total_amount / $booking->participants, 0, ',', '.') }}</td>
-                            <td class="text-end align-middle fw-bold">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr class="table-light">
-                            <th colspan="3" class="text-end">Subtotal</th>
-                            <th class="text-end">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</th>
-                        </tr>
-                        <tr class="table-success">
-                            <th colspan="3" class="text-end fs-6">TOTAL</th>
-                            <th class="text-end fs-5">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</th>
-                        </tr>
-                    </tfoot>
-                </table>
-                
-                <!-- Payment Section with QR -->
-                @if($booking->payment_status == 'Unpaid')
-                <div class="rounded-4 p-4 mt-4" style="background: rgba(255, 193, 7, 0.05); border: 1px solid rgba(255, 193, 7, 0.2);">
+
+                <!-- Footer area styled like screenshot -->
+                <div class="mt-5 pt-4 border-top">
                     <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h6 class="fw-bold mb-3" style="color: var(--text-title)"><i class="bi bi-credit-card-fill text-warning me-2"></i>Instruksi Pembayaran</h6>
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <small class="text-muted d-block text-uppercase small fw-bold" style="font-size: 0.6rem;">Bank BCA</small>
-                                    <strong class="fs-5" style="color: var(--text-title)">1234567890</strong>
+                        <div class="col-md-7">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="bg-success p-2 rounded-3">
+                                    <img src="{{ asset('img/qr-payment.png') }}" style="width: 60px; filter: brightness(0) invert(1);">
                                 </div>
-                                <div class="col-6">
-                                    <small class="text-muted d-block text-uppercase small fw-bold" style="font-size: 0.6rem;">Bank Mandiri</small>
-                                    <strong class="fs-5" style="color: var(--text-title)">0987654321</strong>
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-success">GET IN TOUCH</h6>
+                                    <small class="text-muted d-block">Jl. Kebon Jeruk No. 123, Jakarta Selatan</small>
+                                    <small class="text-muted d-block">+62 812-3456-7890</small>
+                                    <small class="text-muted d-block">info@ekowisata.id</small>
                                 </div>
                             </div>
-                            <p class="text-muted small mt-2 mb-0">a.n. PT Nusantara Green Eco</p>
                         </div>
-                        <div class="col-md-4 text-center">
-                            <div class="bg-white p-2 rounded-3 shadow-sm d-inline-block">
-                                <img src="{{ asset('img/qr-payment.png') }}" alt="QR Payment" class="img-fluid" style="max-width: 100px;">
-                            </div>
-                            <small class="text-muted d-block mt-2">Scan QRIS</small>
+                        <div class="col-md-5 text-md-end">
+                            <p class="text-muted small mb-0">Note: Harap simpan invoice ini sebagai bukti pemesanan yang sah.</p>
                         </div>
                     </div>
                 </div>
-                @elseif($booking->payment_status == 'Pending')
-                <div class="bg-info bg-opacity-10 border border-info rounded-3 p-3 text-center">
-                    <i class="bi bi-hourglass-split text-info fs-3"></i>
-                    <h6 class="fw-bold mt-2 mb-1">Menunggu Verifikasi</h6>
-                    <small class="text-muted">Pembayaran sedang diverifikasi (1x24 jam)</small>
-                </div>
-                @elseif($booking->payment_status == 'Paid')
-                <div class="bg-success bg-opacity-10 border border-success rounded-3 p-3">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <div class="bg-success rounded-circle p-2">
-                                <i class="bi bi-check-lg text-white fs-4"></i>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <h6 class="fw-bold text-success mb-0">Pembayaran Lunas</h6>
-                            <small class="text-muted">{{ $booking->payment_date ? $booking->payment_date->format('d M Y H:i') : '' }} | {{ $booking->payment_method ?? '' }}</small>
-                        </div>
-                        <div class="col-auto">
-                            <img src="{{ asset('img/qr-payment.png') }}" alt="QR" style="width: 60px;">
-                        </div>
-                    </div>
-                </div>
-                @endif
-                
-                <!-- Footer -->
-                <div class="text-center mt-4 pt-3 border-top">
-                    <small class="text-muted">Terima kasih telah memesan di <strong class="text-success">NusantaraGreen</strong></small>
-                </div>
+            </div>
+
+            <!-- Footer Curve (Like Screenshot) -->
+            <div style="position: relative; height: 60px; background: #fff;">
+                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: #2d3436; z-index: 1;"></div>
+                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 45px; background: #198754; border-top-right-radius: 50% 100%; z-index: 2;"></div>
             </div>
         </div>
     </div>

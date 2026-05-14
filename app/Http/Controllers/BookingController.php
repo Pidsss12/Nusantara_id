@@ -34,61 +34,77 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
+        // Mendapatkan user yang sedang login
+        $user = Auth::user();
+
+        // Validasi input dari form
         $validated = $request->validate([
             'destination_id' => 'required|exists:destinations,id',
-            'package_id' => 'nullable|exists:packages,id',
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email|max:255',
-            'customer_phone' => 'required|string|max:20',
-            'institution' => 'nullable|string|max:255',
-            'visit_date' => 'required|date|after:today',
-            'participants' => 'required|integer|min:1|max:100',
-            'notes' => 'nullable|string',
+            'participants' => 'required|integer|min:1',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'restaurant' => 'required|string',
+            'menu' => 'required|string',
+            'meal_frequency' => 'required|integer|min:1',
+            'transport' => 'required|string',
         ]);
 
         $destination = Destination::findOrFail($validated['destination_id']);
         
-        // Calculate total amount
-        $pricePerPax = $destination->price;
-        if (!empty($validated['package_id'])) {
-            $package = Package::find($validated['package_id']);
-            if ($package) {
-                $pricePerPax = $package->price;
-            }
-        }
-        
-        $totalAmount = $pricePerPax * $validated['participants'];
+        // Hitung Durasi (Hari)
+        $start = new \DateTime($validated['start_date']);
+        $end = new \DateTime($validated['end_date']);
+        $days = $end->diff($start)->days + 1;
 
-        // Create booking
+        // Harga Dasar Destinasi
+        $totalAmount = $destination->price * $validated['participants'];
+
+        // Tambahan Biaya Restoran & Menu (Simulasi harga karena di form dikirim nama menu)
+        // Kita bisa ambil harga dari data menu di frontend, tapi untuk keamanan kita simulasi di backend
+        $menuPrices = [
+            'Lobster Bakar' => 185000, 'Cumi Saos Padang' => 75000, 'Kepiting Soka' => 125000, 'Ikan Bakar Jimbaran' => 95000, 'Udang Windu Madu' => 85000,
+            'Nasi Campur Bali' => 45000, 'Ayam Betutu' => 65000, 'Sate Lilit Ayam' => 40000, 'Bebek Goreng Crispy' => 85000, 'Lawar Ayam' => 30000,
+            'Salad Salmon' => 120000, 'Smoothie Bowl' => 55000, 'Quinoa Veggie Burger' => 75000, 'Avocado Toast Special' => 65000, 'Grilled Chicken Caesar' => 80000
+        ];
+        $menuPrice = $menuPrices[$validated['menu']] ?? 0;
+        $totalAmount += ($menuPrice * $validated['meal_frequency']) * $validated['participants'] * $days;
+
+        // Tambahan Biaya Transportasi
+        $transPrice = ($validated['transport'] == 'Udara') ? 850000 : 150000;
+        $totalAmount += $transPrice * $validated['participants'] * $days;
+
+        // Kumpulkan informasi detail ke dalam notes
+        $notes = "Pesanan Ekowisata:\n" .
+                 "- Restoran: {$validated['restaurant']}\n" .
+                 "- Menu: {$validated['menu']}\n" .
+                 "- Frekuensi Makan: {$validated['meal_frequency']}x sehari\n" .
+                 "- Transportasi: {$validated['transport']}\n" .
+                 "- Durasi: {$days} hari ({$validated['start_date']} s/d {$validated['end_date']})";
+
+        // Simpan ke Database
         $booking = Booking::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'destination_id' => $validated['destination_id'],
-            'package_id' => $validated['package_id'] ?? null,
-            'customer_name' => $validated['customer_name'],
-            'customer_email' => $validated['customer_email'],
-            'customer_phone' => $validated['customer_phone'],
-            'institution' => $validated['institution'] ?? null,
-            'visit_date' => $validated['visit_date'],
+            'customer_name' => $user->name,
+            'customer_email' => $user->email,
+            'customer_phone' => $user->phone ?? '08123456789', // Menggunakan nomor user atau default
+            'visit_date' => $validated['start_date'],
             'participants' => $validated['participants'],
             'total_amount' => $totalAmount,
             'status' => 'Pending',
             'payment_status' => 'Unpaid',
-            'notes' => $validated['notes'] ?? null,
+            'notes' => $notes,
         ]);
 
-        // Load relations for email
-        $booking->load(['destination', 'package']);
-
-        // Send invoice email
+        // Kirim Email (Opsional, jika mail server sudah siap)
         try {
-            Mail::to($booking->customer_email)->send(new InvoiceMail($booking));
+            Mail::to($user->email)->send(new InvoiceMail($booking));
         } catch (\Exception $e) {
-            // Log error but don't fail the booking
-            \Log::error('Failed to send invoice email: ' . $e->getMessage());
+            \Log::error('Gagal mengirim email: ' . $e->getMessage());
         }
 
         return redirect()->route('user.invoices.show', $booking)
-            ->with('success', 'Booking berhasil! Invoice sudah dikirim ke email Anda.');
+            ->with('success', 'Pemesanan berhasil! Detail pesanan Anda telah disimpan.');
     }
 
     /**
