@@ -1,13 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Hero Section - NO SEARCH FORM -->
-<div class="hero-section position-relative d-flex align-items-center justify-content-center text-white" style="height: 75vh; background: linear-gradient(135deg, rgba(25,135,84,0.8) 0%, rgba(20,108,67,0.9) 100%), url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop') center/cover fixed; overflow: hidden;">
-    <div class="container text-center">
-        <h1 class="display-2 fw-bold mb-4 text-white" style="text-shadow: 2px 4px 8px rgba(0,0,0,0.3);">
+<div class="hero-section position-relative d-flex align-items-center justify-content-center text-white" style="height: 75vh; overflow: hidden; background-color: #064e3b;">
+    
+    <div class="position-absolute top-0 start-0 w-100 h-100" 
+         style="background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
+                animation: zoomBackground 20s infinite alternate ease-in-out;
+                z-index: 1;">
+    </div>
+
+    <div class="position-absolute top-0 start-0 w-100 h-100" 
+         style="background: linear-gradient(135deg, rgba(25,135,84,0.7) 0%, rgba(20,108,67,0.85) 100%);
+                z-index: 2;">
+    </div>
+
+    <div class="position-absolute top-0 start-0 w-100 h-100 overlay-fog" style="z-index: 3; pointer-events: none;"></div>
+
+    <div class="container text-center position-relative" style="z-index: 5;">
+        <h1 class="display-2 fw-bold mb-4 text-white" style="text-shadow: 2px 4px 15px rgba(0,0,0,0.4);">
             Jelajahi Surga Nusantara
         </h1>
-        <p class="lead fs-3 mb-5 text-white" style="text-shadow: 1px 2px 4px rgba(0,0,0,0.3);">
+        <p class="lead fs-3 mb-5 text-white" style="text-shadow: 1px 2px 8px rgba(0,0,0,0.4);">
             Temukan keindahan ekowisata di 38 Provinsi Indonesia
         </p>
         <div class="d-flex gap-3 justify-content-center">
@@ -21,7 +34,6 @@
     </div>
 </div>
 
-<!-- Featured Destinations Section -->
 <div class="container py-5 mt-5" id="destinasi">
     <div class="text-center mb-5">
         <h2 class="display-5 fw-bold text-success mb-3">Destinasi Pilihan</h2>
@@ -29,7 +41,6 @@
     </div>
 
     <div class="row g-4">
-        <!-- Card 1: Raja Ampat -->
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
                 <div class="position-relative">
@@ -60,7 +71,6 @@
             </div>
         </div>
 
-        <!-- Card 2: Borobudur -->
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
                 <div class="position-relative">
@@ -91,7 +101,6 @@
             </div>
         </div>
 
-        <!-- Card 3: Komodo -->
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
                 <div class="position-relative">
@@ -124,10 +133,8 @@
     </div>
 </div>
 
-<!-- More Destinations Section -->
 <div class="container py-5">
     <div class="row g-4">
-        <!-- Bromo -->
         <div class="col-lg-3 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
                 <img src="https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=400" class="card-img-top" style="height: 200px; object-fit: cover;">
@@ -139,7 +146,6 @@
             </div>
         </div>
 
-        <!-- Danau Toba -->
         <div class="col-lg-3 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
                 <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400" class="card-img-top" style="height: 200px; object-fit: cover;">
@@ -151,7 +157,6 @@
             </div>
         </div>
 
-        <!-- Labuan Bajo -->
         <div class="col-lg-3 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
                 <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400" class="card-img-top" style="height: 200px; object-fit: cover;">
@@ -163,7 +168,6 @@
             </div>
         </div>
 
-        <!-- Wakatobi -->
         <div class="col-lg-3 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
                 <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400" class="card-img-top" style="height: 200px; object-fit: cover;">
@@ -177,7 +181,6 @@
     </div>
 </div>
 
-<!-- About Section -->
 <div class="bg-light py-5" id="tentang">
     <div class="container">
         <div class="row align-items-center">
@@ -213,7 +216,6 @@
     </div>
 </div>
 
-<!-- Call to Action -->
 <div class="bg-success text-white py-5">
     <div class="container text-center">
         <h2 class="display-6 fw-bold mb-3">Siap Memulai Petualangan Anda?</h2>
@@ -224,7 +226,6 @@
     </div>
 </div>
 
-<!-- Destination Detail Modal -->
 <div class="modal fade" id="detailModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 overflow-hidden">
@@ -303,6 +304,26 @@ function showDetail(title, description, restaurant, resort, villa, image) {
     
     .bg-success-subtle {
         background-color: rgba(25, 135, 84, 0.1) !important;
+    }
+
+    /* Animasi Zoom Background Utama */
+    @keyframes zoomBackground {
+        from { transform: scale(1); }
+        to { transform: scale(1.15); }
+    }
+
+    /* Layer Kabut Bergerak untuk Efek Realistik */
+    .overlay-fog {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: url('https://www.transparenttextures.com/patterns/fog.png');
+        opacity: 0.4;
+        animation: moveFog 40s linear infinite;
+    }
+
+    @keyframes moveFog {
+        from { background-position: 0 0; }
+        to { background-position: 1000px 0; }
     }
 </style>
 @endsection

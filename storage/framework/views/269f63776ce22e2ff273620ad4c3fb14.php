@@ -19,8 +19,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white bg-opacity-25 rounded-4 d-flex align-items-center justify-content-center shadow-sm" style="width: 75px; height: 95px; backdrop-filter: blur(8px);">
-                    <i class="bi bi-people-fill text-white" style="font-size: 2.5rem;"></i>
+                <div class="d-flex align-items-center justify-content-center" style="width: 75px; height: 95px;">
+                    <i class="bi bi-people-fill text-white" style="font-size: 3rem; opacity: 0.9;"></i>
                 </div>
             </div>
         </div>
@@ -42,8 +42,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white bg-opacity-25 rounded-4 d-flex align-items-center justify-content-center shadow-sm" style="width: 75px; height: 95px; backdrop-filter: blur(8px);">
-                    <i class="bi bi-journal-check text-white" style="font-size: 2.5rem;"></i>
+                <div class="d-flex align-items-center justify-content-center" style="width: 75px; height: 95px;">
+                    <i class="bi bi-journal-check text-white" style="font-size: 3rem; opacity: 0.9;"></i>
                 </div>
             </div>
         </div>
@@ -65,8 +65,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white bg-opacity-25 rounded-4 d-flex align-items-center justify-content-center shadow-sm" style="width: 75px; height: 95px; backdrop-filter: blur(8px);">
-                    <i class="bi bi-wallet2 text-white" style="font-size: 2.5rem;"></i>
+                <div class="d-flex align-items-center justify-content-center" style="width: 75px; height: 95px;">
+                    <i class="bi bi-wallet2 text-white" style="font-size: 3rem; opacity: 0.9;"></i>
                 </div>
             </div>
         </div>
@@ -88,8 +88,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white bg-opacity-25 rounded-4 d-flex align-items-center justify-content-center shadow-sm" style="width: 75px; height: 95px; backdrop-filter: blur(8px);">
-                    <i class="bi bi-lightning-charge-fill text-white" style="font-size: 2.5rem;"></i>
+                <div class="d-flex align-items-center justify-content-center" style="width: 75px; height: 95px;">
+                    <i class="bi bi-lightning-charge-fill text-white" style="font-size: 3rem; opacity: 0.9;"></i>
                 </div>
             </div>
         </div>
@@ -165,18 +165,6 @@
                         <small class="text-muted" style="font-size: 0.7rem;">15 minutes ago</small>
                     </div>
                 </div>
-                <div class="d-flex gap-3 mb-4">
-                    <div class="flex-shrink-0">
-                        <div class="rounded-3 p-2 bg-warning bg-opacity-10 text-warning">
-                            <i class="bi bi-star-fill fs-5"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <h6 class="mb-1 fw-bold">New Review Received</h6>
-                        <p class="mb-0 text-muted small">"Amazing trip to Raja Ampat!" - 5 Stars</p>
-                        <small class="text-muted" style="font-size: 0.7rem;">1 hour ago</small>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -250,7 +238,6 @@ function initCharts() {
 
 document.addEventListener('DOMContentLoaded', function() {
     initCharts();
-    
     var map = L.map('indonesiaMap').setView([-2.5, 118], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 

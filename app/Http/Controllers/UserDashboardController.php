@@ -7,6 +7,8 @@ use App\Models\Destination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage; // Tambahkan ini untuk handle file
+use Illuminate\Support\Facades\Mail;
 
 class UserDashboardController extends Controller
 {
@@ -97,6 +99,37 @@ class UserDashboardController extends Controller
         return back()->with('success', 'Profile updated successfully!');
     }
 
+    /**
+     * METHOD BARU: Update Foto Profil
+     */
+    public function updatePhoto(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $user = Auth::user();
+
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada agar storage tidak penuh
+            if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+                Storage::disk('public')->delete($user->profile_photo);
+            }
+
+            // Simpan foto baru ke folder profile_photos
+            $path = $request->file('photo')->store('profile_photos', 'public');
+
+            // Update path foto di database
+            $user->update([
+                'profile_photo' => $path
+            ]);
+
+            return back()->with('success', 'Profile photo updated successfully!');
+        }
+
+        return back()->with('error', 'Failed to upload photo.');
+    }
+
     public function updatePassword(Request $request)
     {
         $validated = $request->validate([
@@ -119,12 +152,10 @@ class UserDashboardController extends Controller
 
     public function cancelBooking(Booking $booking)
     {
-        // Check if booking belongs to user
         if ($booking->user_id !== Auth::id()) {
             abort(403);
         }
         
-        // Only allow cancellation of pending or confirmed bookings
         if (!in_array($booking->status, ['Pending', 'Confirmed'])) {
             return back()->with('error', 'This booking cannot be cancelled');
         }
@@ -140,7 +171,6 @@ class UserDashboardController extends Controller
             ->whereNotNull('invoice_code')
             ->with(['destination', 'package']);
         
-        // Filter by payment status
         if ($request->filled('payment_status')) {
             $query->where('payment_status', $request->payment_status);
         }
@@ -152,7 +182,6 @@ class UserDashboardController extends Controller
 
     public function invoiceDetail(Booking $booking)
     {
-        // Check if booking belongs to user
         if ($booking->user_id !== Auth::id()) {
             abort(403);
         }
@@ -164,7 +193,6 @@ class UserDashboardController extends Controller
 
     public function confirmPayment(Request $request, Booking $booking)
     {
-        // Check if booking belongs to user
         if ($booking->user_id !== Auth::id()) {
             abort(403);
         }
@@ -186,13 +214,11 @@ class UserDashboardController extends Controller
         
         $booking->update($data);
         
-        
         return back()->with('success', 'Payment confirmation submitted. Waiting for admin verification.');
     }
 
     public function downloadInvoicePdf(Booking $booking)
     {
-        // Check if booking belongs to user
         if ($booking->user_id !== Auth::id()) {
             abort(403);
         }
@@ -206,7 +232,6 @@ class UserDashboardController extends Controller
 
     public function resendInvoiceEmail(Booking $booking)
     {
-        // Check if booking belongs to user
         if ($booking->user_id !== Auth::id()) {
             abort(403);
         }
@@ -214,7 +239,7 @@ class UserDashboardController extends Controller
         $booking->load(['destination', 'package']);
         
         try {
-            \Mail::to($booking->customer_email)->send(new \App\Mail\InvoiceMail($booking));
+            Mail::to($booking->customer_email)->send(new \App\Mail\InvoiceMail($booking));
             return back()->with('success', 'Invoice email sent successfully to ' . $booking->customer_email);
         } catch (\Exception $e) {
             return back()->with('error', 'Failed to send email: ' . $e->getMessage());

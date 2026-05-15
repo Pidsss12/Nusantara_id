@@ -28,53 +28,70 @@
         .main-wrapper {
             height: 100vh;
             width: 100vw;
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('{{ asset('img/tourism-bg.png') }}');
+            display: flex;
+            background-color: #f8faf9;
+        }
+
+        /* Left Side: Login Form */
+        .login-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: white;
+            z-index: 2;
+        }
+
+        /* Right Side: Motif/Image */
+        .visual-side {
+            flex: 1.2;
+            position: relative;
+            background: linear-gradient(135deg, rgba(25, 135, 84, 0.8), rgba(10, 31, 20, 0.9)), url('{{ asset('img/tourism-bg.png') }}');
             background-size: cover;
             background-position: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+        }
+
+        /* Decorative Motif Overlay */
+        .visual-side::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0);
+            background-size: 32px 32px;
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 40px;
-            padding: 50px 40px;
             width: 100%;
-            max-width: 440px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            max-width: 420px;
             position: relative;
-            z-index: 10;
-            animation: fadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            animation: fadeIn 0.8s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .brand-header {
-            text-align: center;
+            text-align: left;
             margin-bottom: 40px;
         }
 
         .logo-box {
-            width: 80px;
-            height: 80px;
-            background: #fff;
+            width: 70px;
+            height: 70px;
+            background: #f0fdf4;
             padding: 12px;
-            border-radius: 24px;
-            margin: 0 auto 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(25, 135, 84, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: rotate(-3deg);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .logo-box img {
@@ -84,22 +101,21 @@
         }
 
         h2 {
-            color: #fff;
-            font-size: 2rem;
+            color: #1a1a1a;
+            font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95rem;
-            font-weight: 400;
+            color: #6c757d;
+            font-size: 1rem;
         }
 
         .input-wrapper {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .input-wrapper i.prefix-icon {
@@ -107,32 +123,24 @@
             left: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #198754; /* Dark green for high contrast */
+            color: var(--primary);
             font-size: 1.2rem;
             z-index: 10;
-            pointer-events: none;
-            opacity: 1 !important;
         }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.9) !important; /* Semi-solid for better contrast */
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            background: #f8faf9 !important;
+            border: 1px solid #e2e8f0 !important;
             border-radius: 15px !important;
             padding: 14px 20px 14px 50px !important;
-            color: #333 !important; /* Dark text for readability */
-            font-size: 1rem !important;
+            color: #333 !important;
             transition: all 0.3s ease !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
-        }
-
-        .form-control::placeholder {
-            color: #999 !important;
         }
 
         .form-control:focus {
             background: #fff !important;
-            border-color: var(--primary-light) !important;
-            box-shadow: 0 0 20px var(--primary-glow) !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 4px var(--primary-glow) !important;
         }
 
         .pass-toggle {
@@ -140,161 +148,133 @@
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #198754; /* Match theme */
+            color: var(--primary);
             cursor: pointer;
             z-index: 10;
-            font-size: 1.2rem;
-            background: none;
             border: none;
-            padding: 5px;
-            display: flex;
-            align-items: center;
+            background: none;
         }
 
         .form-utils {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 30px;
-            font-size: 0.95rem;
-            color: #fff;
-            padding: 0 5px;
-        }
-
-        .check-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .form-check-input {
-            width: 1.1em;
-            height: 1.1em;
-            margin: 0;
-            cursor: pointer;
-            border: 2px solid white;
+            font-size: 0.9rem;
         }
 
         .forgot-pass {
-            color: #fff;
+            color: var(--primary);
             text-decoration: none;
-            font-weight: 700;
-            transition: 0.3s;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-        }
-
-        .forgot-pass:hover {
-            color: #ffc107;
-            border-bottom-color: #ffc107;
+            font-weight: 600;
         }
 
         .btn-submit {
             background: linear-gradient(135deg, #198754 0%, #20c997 100%);
             border: none;
-            border-radius: 18px;
+            border-radius: 15px;
             padding: 16px;
             color: #fff;
             font-weight: 700;
-            font-size: 1.1rem;
             width: 100%;
-            transition: all 0.4s;
-            box-shadow: 0 10px 30px rgba(25, 135, 84, 0.4);
+            box-shadow: 0 8px 20px rgba(25, 135, 84, 0.2);
             margin-bottom: 25px;
         }
 
         .btn-submit:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(25, 135, 84, 0.6);
-            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(25, 135, 84, 0.3);
         }
 
         .footer-text {
             text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95rem;
+            color: #6c757d;
         }
 
         .footer-text a {
-            color: #fff;
-            text-decoration: none;
+            color: var(--primary);
             font-weight: 700;
-            margin-left: 5px;
-            transition: 0.3s;
-        }
-
-        .footer-text a:hover {
-            color: var(--primary-light);
+            text-decoration: none;
         }
 
         .custom-alert {
-            background: rgba(220, 53, 69, 0.2);
-            border: 1px solid rgba(220, 53, 69, 0.4);
-            border-radius: 18px;
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            color: #ffb3b9;
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #c53030;
             font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        }
+
+        /* Text overlay on visual side */
+        .visual-content {
+            position: relative;
+            z-index: 5;
+            color: white;
+            text-align: center;
+            padding: 40px;
         }
     </style>
 </head>
 <body>
     <div class="main-wrapper">
-        <div class="glass-card">
-            <div class="brand-header">
-                <div class="logo-box">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo">
+        <div class="login-side">
+            <div class="glass-card">
+                <div class="brand-header">
+                    <div class="logo-box">
+                        <img src="{{ asset('img/logo.png') }}" alt="Logo">
+                    </div>
+                    <h2>Selamat Datang</h2>
+                    <p class="subtitle">Silakan masuk ke akun NusantaraGreen Anda</p>
                 </div>
-                <h2>Selamat Datang</h2>
-                <p class="subtitle">Eksplorasi Alam Nusantara</p>
+
+                @if ($errors->any())
+                    <div class="custom-alert d-flex align-items-center gap-2">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        <ul class="mb-0 list-unstyled">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <div class="input-wrapper">
+                        <i class="bi bi-person-circle prefix-icon"></i>
+                        <input type="email" class="form-control" name="email" placeholder="Alamat Email" value="{{ old('email') }}" required autofocus>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <i class="bi bi-shield-lock prefix-icon"></i>
+                        <input type="password" id="password" class="form-control" name="password" placeholder="Kata Sandi" required>
+                        <button type="button" class="pass-toggle" onclick="togglePassword()">
+                            <i class="bi bi-eye-fill" id="eyeIcon"></i>
+                        </button>
+                    </div>
+
+                    <div class="form-utils">
+                        <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
+                            <input type="checkbox" class="form-check-input mt-0" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <span>Ingat Saya</span>
+                        </label>
+                        <a href="{{ route('password.request') }}" class="forgot-pass">Lupa Sandi?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Masuk Sekarang</button>
+                </form>
+
+                <div class="footer-text">
+                    Belum punya akun? <a href="{{ route('register') }}">Daftar Disini</a>
+                </div>
             </div>
+        </div>
 
-            @if ($errors->any())
-                <div class="custom-alert">
-                    <i class="bi bi-exclamation-circle-fill fs-5"></i>
-                    <ul class="mb-0 list-unstyled">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-                
-                <div class="input-wrapper">
-                    <i class="bi bi-person-circle prefix-icon"></i>
-                    <input type="email" class="form-control" name="email" placeholder="Alamat Email" 
-                           value="{{ old('email') }}" required autofocus>
-                </div>
-                
-                <div class="input-wrapper">
-                    <i class="bi bi-shield-lock prefix-icon"></i>
-                    <input type="password" id="password" class="form-control" name="password" placeholder="Kata Sandi" required>
-                    <button type="button" class="pass-toggle" onclick="togglePassword()">
-                        <i class="bi bi-eye-fill" id="eyeIcon"></i>
-                    </button>
-                </div>
-
-                <div class="form-utils">
-                    <label class="check-container">
-                        <input type="checkbox" class="form-check-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                        Ingat Saya
-                    </label>
-                    <a href="{{ route('password.request') }}" class="forgot-pass">Lupa Sandi?</a>
-                </div>
-
-                <button type="submit" class="btn-submit">Masuk Sekarang</button>
-            </form>
-
-            <div class="footer-text">
-                Belum punya akun? <a href="{{ route('register') }}">Daftar Disini</a>
+        <div class="visual-side">
+            <div class="visual-content">
+                <h1 class="display-4 fw-bold mb-3">Lestarikan Alam</h1>
+                <p class="lead opacity-75">Bergabunglah dalam menjaga keasrian destinasi ekowisata Indonesia bersama NusantaraGreen.</p>
             </div>
         </div>
     </div>
@@ -303,7 +283,6 @@
         function togglePassword() {
             const pass = document.getElementById('password');
             const icon = document.getElementById('eyeIcon');
-            
             if (pass.type === 'password') {
                 pass.type = 'text';
                 icon.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');

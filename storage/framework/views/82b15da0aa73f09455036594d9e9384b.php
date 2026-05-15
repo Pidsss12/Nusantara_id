@@ -22,7 +22,7 @@
             --text-title: #1e293b;
             --text-body: #475569;
             --glass-border: rgba(255, 255, 255, 0.2);
-            --topbar-bg: rgba(255, 255, 255, 0.8);
+            --topbar-bg: rgba(255, 255, 255, 0.9);
             --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
@@ -33,7 +33,7 @@
             --text-title: #f8fafc;
             --text-body: #cbd5e1;
             --glass-border: rgba(255, 255, 255, 0.05);
-            --topbar-bg: rgba(15, 23, 42, 0.8);
+            --topbar-bg: rgba(15, 23, 42, 0.9);
             --card-shadow: 0 15px 40px rgba(0,0,0,0.4);
         }
         
@@ -52,7 +52,7 @@
             bottom: 0;
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
-            z-index: 1060;
+            z-index: 1040; 
             display: flex;
             flex-direction: column;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -107,23 +107,38 @@
         
         .main-content {
             margin-left: var(--sidebar-width);
-            padding: 30px;
+            /* Padding 0 agar Top Bar menempel ke ujung layar */
+            padding: 0; 
             min-height: 100vh;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             width: calc(100% - var(--sidebar-width));
+            display: flex;
+            flex-direction: column;
         }
         
+        /* MODIFIKASI DISINI: Membuat Top Bar Rapat/Full */
         .top-bar {
             background: var(--topbar-bg);
             backdrop-filter: blur(15px);
-            border-radius: 20px;
+            /* Menghilangkan radius agar menempel kotak ke ujung */
+            border-radius: 0; 
+            /* Menghilangkan margin agar tidak mengambang */
+            margin-bottom: 25px; 
             padding: 15px 30px;
-            margin-bottom: 30px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--card-shadow);
-            vertical-align: middle;
+            border-bottom: 1px solid var(--glass-border);
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             z-index: 1001;
-            position: relative;
+            width: 100%;
+            position: sticky;
+            top: 0;
+        }
+        
+        /* Padding konten di bawah header agar tetap rapi */
+        .content-body {
+            padding: 0 30px 30px 30px;
         }
         
         .theme-toggle {
@@ -155,12 +170,7 @@
             bottom: 0;
             background: rgba(0,0,0,0.4);
             backdrop-filter: blur(4px);
-            z-index: 1050;
-            transition: all 0.4s;
-        }
-
-        .dropdown-menu {
-            z-index: 1100 !important;
+            z-index: 1030;
         }
 
         @media (max-width: 1200px) {
@@ -169,6 +179,7 @@
             }
             .sidebar.show { 
                 left: 0; 
+                z-index: 1060; 
             }
             .sidebar.show ~ .sidebar-overlay {
                 display: block;
@@ -176,7 +187,9 @@
             .main-content { 
                 margin-left: 0; 
                 width: 100%;
-                padding: 20px;
+            }
+            .content-body {
+                padding: 0 20px 20px 20px;
             }
             .menu-toggle { 
                 display: block !important; 
@@ -252,7 +265,7 @@
                     <i class="bi bi-list"></i>
                 </div>
                 <div>
-                    <h4 class="mb-0 fw-bold" style="color: var(--text-title)"><?php echo $__env->yieldContent('page-title', 'Dashboard Overview'); ?></h4>
+                    <h5 class="mb-0 fw-bold" style="color: var(--text-title)"><?php echo $__env->yieldContent('page-title', 'Dashboard Overview'); ?></h5>
                     <small class="text-muted">Welcome back, <?php echo e(Auth::check() ? Auth::user()->name : 'User'); ?></small>
                 </div>
             </div>
@@ -289,10 +302,12 @@
             </div>
         </header>
 
-        <main class="container-fluid p-0">
+        <main class="content-body">
             <?php echo $__env->yieldContent('content'); ?>
         </main>
     </div>
+
+    <?php echo $__env->yieldPushContent('modals'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -34,24 +34,25 @@
             background-attachment: fixed;
             color: var(--text-body);
             font-family: 'Outfit', sans-serif;
+            margin: 0;
         }
         
+        /* FIX: Sidebar Full ke Samping (Gak Ngambang) */
         .sidebar {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            bottom: 20px;
+            top: 0;
+            left: 0;
+            bottom: 0;
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            box-shadow: 10px 0 40px rgba(0,0,0,0.1);
             z-index: 1050;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.4s;
             display: flex;
             flex-direction: column;
+            border-radius: 0; /* Menghilangkan sudut bulat agar full nempel */
+            box-shadow: 5px 0 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s;
         }
         
         .sidebar-header {
@@ -73,7 +74,7 @@
             color: rgba(255,255,255,0.7);
             text-decoration: none;
             transition: all 0.3s;
-            border-radius: 18px;
+            border-radius: 12px;
             margin-bottom: 8px;
             font-weight: 500;
         }
@@ -86,15 +87,8 @@
         .sidebar-menu a.active {
             background: rgba(255, 255, 255, 0.2) !important;
             color: white !important;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
             font-weight: 700;
             border-left: 4px solid #20c997;
-            border-radius: 14px;
-        }
-        
-        .sidebar-menu a.active i {
-            color: rgba(255,255,255,0.9) !important;
-            font-size: 1.2rem;
         }
         
         .sidebar-menu a i {
@@ -102,8 +96,9 @@
             font-size: 1.2rem;
         }
         
+        /* FIX: Main content mengikuti sidebar yang nempel */
         .main-content {
-            margin-left: 310px; /* sidebar width 280 + 30 gap */
+            margin-left: var(--sidebar-width);
             height: 100vh;
             overflow-y: auto;
             position: relative;
@@ -112,15 +107,11 @@
         .top-bar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 0 0 25px 25px;
             padding: 20px 30px;
-            border: 1px solid rgba(255,255,255,0.8);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 1020;
-            margin: 0 30px;
         }
 
         .content-area {
@@ -135,51 +126,26 @@
             transition: all 0.3s;
         }
 
-        .premium-card:hover {
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-        }
-
-        /* Custom Aesthetic Pagination */
-        .pagination {
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
+        /* Pagination Style */
+        .pagination { gap: 10px; justify-content: center; margin-top: 20px; }
         .page-item .page-link {
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50% !important;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            color: var(--text-body);
-            font-weight: 600;
-            transition: all 0.3s;
+            width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50% !important; background: var(--bg-card); border: 1px solid var(--glass-border);
+            color: var(--text-body); font-weight: 600; transition: all 0.3s;
         }
         .page-item.active .page-link {
-            background: var(--primary-green) !important;
-            color: white !important;
-            border-color: transparent !important;
-            transform: scale(1.1);
+            background: var(--primary-green) !important; color: white !important; transform: scale(1.1);
         }
-        
-        .page-item .page-link:hover:not(.active) {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-            color: white;
-        }
-        
-        .page-item.disabled .page-link {
-            background: rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.5);
-            box-shadow: none;
+
+        /* Responsive Mobile */
+        @media (max-width: 991.98px) {
+            .sidebar { left: -100%; }
+            .main-content { margin-left: 0; }
+            .sidebar.show { left: 0; }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="d-flex align-items-center">
@@ -222,9 +188,7 @@
         </div>
     </div>
     
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Top Bar -->
         <div class="top-bar">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
@@ -232,11 +196,6 @@
                     <small class="text-muted">@yield('page-subtitle', 'Welcome back, ' . Auth::user()->name)</small>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <div class="me-2 d-none d-sm-block">
-                        <span class="badge rounded-pill px-3 py-2" style="background: rgba(25, 135, 84, 0.1); color: var(--primary-green); border: 1px solid rgba(25, 135, 84, 0.1);">
-                            <i class="bi bi-calendar3 me-2"></i>{{ now()->format('d M Y') }}
-                        </span>
-                    </div>
                     <div class="dropdown">
                         <div class="d-flex align-items-center gap-3" style="cursor: pointer;" data-bs-toggle="dropdown">
                             <div class="text-end d-none d-sm-block">
@@ -261,7 +220,6 @@
             </div>
         </div>
         
-        <!-- Content -->
         <div class="content-area">
             @yield('content')
         </div>
@@ -271,36 +229,12 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     <script>
-        // Global SweetAlert2 Session Handling
+        // Global SweetAlert logic
         @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: "{{ session('success') }}",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                background: 'rgba(255, 255, 255, 0.95)',
-                backdrop: `rgba(25, 135, 84, 0.1)`,
-                customClass: {
-                    popup: 'premium-card',
-                    title: 'fw-bold text-success'
-                }
-            });
+            Swal.fire({ icon: 'success', title: 'Success!', text: "{{ session('success') }}", timer: 3000, showConfirmButton: false });
         @endif
-
         @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: "{{ session('error') }}",
-                confirmButtonColor: '#198754',
-                background: 'rgba(255, 255, 255, 0.95)',
-                customClass: {
-                    popup: 'premium-card',
-                    title: 'fw-bold text-danger'
-                }
-            });
+            Swal.fire({ icon: 'error', title: 'Error!', text: "{{ session('error') }}", confirmButtonColor: '#198754' });
         @endif
     </script>
     @yield('scripts')

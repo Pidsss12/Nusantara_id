@@ -36,9 +36,48 @@
 
     .transition-hover { transition: all 0.3s ease; }
     .transition-hover:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+    /* Denah Kursi 4 Kursi (2-2) */
+    .seat-container {
+        display: grid;
+        grid-template-columns: repeat(2, auto) 25px repeat(2, auto);
+        gap: 8px;
+        justify-content: center;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 12px;
+    }
+    .seat {
+        width: 35px;
+        height: 35px;
+        background-color: #ffffff;
+        border: 2px solid #dee2e6;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .seat.selected { background-color: #198754 !important; border-color: #198754 !important; }
+    .seat.occupied { background-color: #dc3545 !important; border-color: #dc3545 !important; cursor: not-allowed; }
+    .aisle { width: 25px; }
 </style>
 
 <div class="container py-5">
+    <?php if(session('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> <?php echo e(session('success')); ?>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if(session('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo e(session('error')); ?>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="<?php echo e(url('/')); ?>" class="text-success text-decoration-none">Home</a></li>
@@ -135,17 +174,29 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label small fw-bold text-muted">TRANSPORTASI</label>
-                            <div class="d-flex gap-2">
+                            <label class="form-label small fw-bold text-muted">TRANSPORTASI (Bayar 1x)</label>
+                            <div class="d-flex gap-2 mb-2">
                                 <input type="radio" class="btn-check" name="transport" id="darat" value="Darat" data-price="150000" checked>
                                 <label class="btn btn-outline-success w-100 rounded-3 py-2" for="darat">
-                                    <i class="bi bi-car-front"></i> Darat<br><small>Rp 150rb/hr</small>
+                                    <i class="bi bi-bus-front"></i> Darat<br><small>Rp 150rb</small>
                                 </label>
 
                                 <input type="radio" class="btn-check" name="transport" id="udara" value="Udara" data-price="850000">
                                 <label class="btn btn-outline-success w-100 rounded-3 py-2" for="udara">
-                                    <i class="bi bi-airplane"></i> Udara<br><small>Rp 850rb/hr</small>
+                                    <i class="bi bi-airplane"></i> Udara<br><small>Rp 850rb</small>
                                 </label>
+                            </div>
+                            <div id="taxiInfo" class="alert alert-info py-2 px-3 rounded-3 d-none mb-0" style="font-size: 0.8rem;">
+                                <i class="bi bi-info-circle-fill me-1"></i> Bonus: <strong>Free Taxi ke Hotel!</strong>
+                            </div>
+                        </div>
+
+                        <div id="seatSection" class="mb-4 d-none">
+                            <label class="form-label small fw-bold text-muted d-block text-center mb-2">PILIH KURSI (2 - 2)</label>
+                            <div class="seat-container">
+                                <div class="seat"></div><div class="seat occupied"></div>
+                                <div class="aisle"></div>
+                                <div class="seat"></div><div class="seat"></div>
                             </div>
                         </div>
 
@@ -162,7 +213,7 @@
                                 <span id="mealPriceText">Rp 0</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2 small text-muted">
-                                <span>Trans (x<span class="pax-count">1</span> pax x <span class="day-count">1</span> hr)</span>
+                                <span>Trans (Sekali Bayar x <span class="pax-count">1</span> pax)</span>
                                 <span id="transPriceText">Rp 0</span>
                             </div>
                             <hr class="my-2">
@@ -199,8 +250,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuSelect = document.getElementById('menuSelect');
     const mealFrequency = document.getElementById('mealFrequency');
     const menuSection = document.getElementById('menuSection');
+    const seatSection = document.getElementById('seatSection');
+    const taxiInfo = document.getElementById('taxiInfo');
     const transportRadios = document.querySelectorAll('input[name="transport"]');
     const durationBadge = document.getElementById('durationBadge');
+    const seats = document.querySelectorAll('.seat:not(.occupied)');
     
     const menuData = {
         "Resto Bahari": [
@@ -232,12 +286,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
+    seats.forEach(seat => {
+        seat.addEventListener('click', function() {
+            const max = parseInt(participantsInput.value) || 1;
+            const selectedCount = document.querySelectorAll('.seat.selected').length;
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+            } else if (selectedCount < max) {
+                this.classList.add('selected');
+            }
+        });
+    });
+
     if(form) {
         form.addEventListener('submit', function(e) {
             let isValid = true;
             let firstField = null;
             const requiredFields = form.querySelectorAll('[required]');
-
             requiredFields.forEach(field => {
                 const bubble = document.getElementById('err-' + field.id);
                 if (!field.value || field.value === "") {
@@ -250,11 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(bubble) bubble.style.display = 'none';
                 }
             });
-
-            if(!isValid) {
-                e.preventDefault();
-                firstField.focus();
-            }
+            if(!isValid) { e.preventDefault(); firstField.focus(); }
         });
 
         form.querySelectorAll('input, select').forEach(el => {
@@ -291,9 +352,19 @@ document.addEventListener('DOMContentLoaded', function() {
         transportRadios.forEach(r => {
             if (r.checked) {
                 transPrice = parseInt(r.getAttribute('data-price'));
+                if(r.id === 'udara') {
+                    seatSection.classList.remove('d-none');
+                    taxiInfo.classList.remove('d-none');
+                } else {
+                    seatSection.classList.add('d-none');
+                    taxiInfo.classList.add('d-none');
+                    document.querySelectorAll('.seat.selected').forEach(s => s.classList.remove('selected'));
+                }
             }
         });
-        const totalTrans = transPrice * pax * days;
+        
+        // Logika Transportasi: Hanya dikali pax (Sekali Bayar), tidak dikali hari
+        const totalTrans = transPrice * pax;
 
         document.getElementById('destPriceText').textContent = formatRupiah(totalDest);
         document.getElementById('mealPriceText').textContent = formatRupiah(totalMeal);
@@ -314,9 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 opt.textContent = `${item.name} (${formatRupiah(item.price)})`;
                 menuSelect.appendChild(opt);
             });
-        } else {
-            menuSection.classList.add('d-none');
-        }
+        } else { menuSection.classList.add('d-none'); }
         calculateTotal();
     });
 

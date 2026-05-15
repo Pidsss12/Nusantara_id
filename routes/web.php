@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -9,9 +10,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/destinations', [App\Http\Controllers\DestinationController::class, 'index'])->name('destinations.index');
-
 Route::get('/destination/{id}', [App\Http\Controllers\DestinationController::class, 'show'])->name('destination.show');
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
@@ -35,12 +34,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/booking/{booking}/success', [App\Http\Controllers\BookingController::class, 'success'])->name('booking.success');
 });
 
-// User Dashboard Routes
+// User Dashboard Routes (DIPERBARUI)
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('/bookings', [App\Http\Controllers\UserDashboardController::class, 'bookings'])->name('bookings');
     Route::get('/profile', [App\Http\Controllers\UserDashboardController::class, 'profile'])->name('profile');
     Route::put('/profile', [App\Http\Controllers\UserDashboardController::class, 'updateProfile'])->name('profile.update');
+    
+    // RUTE BARU: Ini yang bikin tombol kamera ijo kamu jalan
+    Route::patch('/profile/photo', [App\Http\Controllers\UserDashboardController::class, 'updatePhoto'])->name('profile.photo');
+
     Route::put('/password', [App\Http\Controllers\UserDashboardController::class, 'updatePassword'])->name('password.update');
     Route::patch('/bookings/{booking}/cancel', [App\Http\Controllers\UserDashboardController::class, 'cancelBooking'])->name('bookings.cancel');
 
@@ -60,7 +63,6 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix
 
     // Destinations CRUD
     Route::get('/destinations', [\App\Http\Controllers\Admin\DestinationController::class, 'index'])->name('destinations');
-    // ... (rute destinations lainnya tetap sama)
     Route::post('/destinations', [\App\Http\Controllers\Admin\DestinationController::class, 'store'])->name('destinations.store');
     Route::get('/destinations/{destination}', [\App\Http\Controllers\Admin\DestinationController::class, 'show'])->name('destinations.show');
     Route::get('/destinations/{destination}/edit', [\App\Http\Controllers\Admin\DestinationController::class, 'edit'])->name('destinations.edit');
@@ -95,6 +97,6 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix
     // Settings
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings');
     Route::put('/settings/profile', [\App\Http\Controllers\Admin\SettingController::class, 'updateProfile'])->name('settings.profile');
-    Route::put('/settings/profile/image', [\App\Http\Controllers\Admin\SettingController::class, 'updateImage'])->name('settings.profile.image'); // Baris Baru
+    Route::put('/settings/profile/image', [\App\Http\Controllers\Admin\SettingController::class, 'updateImage'])->name('settings.profile.image');
     Route::put('/settings/password', [\App\Http\Controllers\Admin\SettingController::class, 'updatePassword'])->name('settings.password');
 });

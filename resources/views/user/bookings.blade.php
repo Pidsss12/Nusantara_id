@@ -4,92 +4,18 @@
 @section('page-title', 'My Bookings')
 @section('page-subtitle', 'View and manage your booking history')
 
-@section('styles')
-<style>
-    .btn:focus, .btn:active, .form-select:focus, .form-control:focus {
-        outline: none !important;
-        box-shadow: none !important;
-    }
-
-    .main-content-wrapper {
-        margin-left: 280px;
-        padding: 20px;
-        transition: all 0.3s ease;
-    }
-
-    @media (max-width: 991.98px) {
-        .main-content-wrapper {
-            margin-left: 0;
-            padding: 15px;
-        }
-    }
-
-    .btn-premium-action {
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 800;
-        padding: 10px 20px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        min-width: 140px;
-    }
-
-    .btn-premium-success {
-        background: rgba(25, 135, 84, 0.18);
-        color: #115e3b;
-        border: 2px solid rgba(25, 135, 84, 0.4);
-    }
-
-    .btn-premium-success:hover {
-        background: #198754;
-        border-color: #198754;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(25, 135, 84, 0.25) !important;
-    }
-
-    .btn-premium-danger {
-        background: rgba(220, 53, 69, 0.18);
-        color: #b02a37;
-        border: 2px solid rgba(220, 53, 69, 0.4);
-    }
-
-    .btn-premium-danger:hover {
-        background: #dc3545;
-        border-color: #dc3545;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(220, 53, 69, 0.25) !important;
-    }
-
-    .booking-stat-icon {
-        width: 38px;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 10px;
-    }
-
-    .btn-success, .btn-light {
-        border: none !important;
-    }
-</style>
-@endsection
-
 @section('content')
-<div class="main-content-wrapper">
+{{-- 
+    Ganti class 'main-content-wrapper' manual dengan 'container-fluid' 
+    dan padding standar Bootstrap 'py-4 px-3 px-lg-5'
+--}}
+<div class="container-fluid py-4 px-3 px-lg-4">
 
-    <div class="premium-card p-4 mb-4">
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
         <form action="{{ route('user.bookings') }}" method="GET" class="row g-3 align-items-end" id="filterForm">
             <div class="col-md-3">
-                <p class="mb-2 small fw-bold text-uppercase opacity-75" style="letter-spacing: 1px; font-size: 0.7rem;">Booking Status</p>
-                <select name="status" class="form-select border-0 shadow-sm rounded-3 py-2 px-3" style="background: rgba(255,255,255,0.8); height: 45px;">
+                <label class="form-label small fw-bold text-uppercase text-muted mb-2" style="letter-spacing: 1px;">Booking Status</label>
+                <select name="status" class="form-select border-0 bg-light rounded-3 shadow-none" style="height: 48px;">
                     <option value="">All Status</option>
                     <option value="Confirmed" {{ request('status') == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
                     <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
@@ -97,23 +23,19 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <p class="mb-2 small fw-bold text-uppercase opacity-75" style="letter-spacing: 1px; font-size: 0.7rem;">From Date</p>
-                <input type="date" name="date_from" class="form-control border-0 shadow-sm rounded-3 py-2 px-3" value="{{ request('date_from') }}" style="background: rgba(255,255,255,0.8); height: 45px;">
+                <label class="form-label small fw-bold text-uppercase text-muted mb-2" style="letter-spacing: 1px;">From Date</label>
+                <input type="date" name="date_from" class="form-control border-0 bg-light rounded-3 shadow-none" value="{{ request('date_from') }}" style="height: 48px;">
             </div>
             <div class="col-md-3">
-                <p class="mb-2 small fw-bold text-uppercase opacity-75" style="letter-spacing: 1px; font-size: 0.7rem;">To Date</p>
-                <input type="date" name="date_to" class="form-control border-0 shadow-sm rounded-3 py-2 px-3" value="{{ request('date_to') }}" style="background: rgba(255,255,255,0.8); height: 45px;">
+                <label class="form-label small fw-bold text-uppercase text-muted mb-2" style="letter-spacing: 1px;">To Date</label>
+                <input type="date" name="date_to" class="form-control border-0 bg-light rounded-3 shadow-none" value="{{ request('date_to') }}" style="height: 48px;">
             </div>
             <div class="col-md-3">
                 <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-success rounded-pill px-0 fw-bold shadow-sm w-100" style="height: 45px;">
+                    <button type="submit" class="btn btn-success rounded-3 fw-bold w-100 shadow-sm border-0" style="height: 48px;">
                         <i class="bi bi-search me-2"></i>Filter
                     </button>
-                    <button type="button" 
-                            formnovalidate
-                            onclick="window.location.href='{{ route('user.bookings') }}'" 
-                            class="btn btn-light rounded-pill px-0 fw-bold text-muted border-0 shadow-sm w-100" 
-                            style="height: 45px;">
+                    <button type="button" onclick="window.location.href='{{ route('user.bookings') }}'" class="btn btn-light rounded-3 fw-bold text-muted w-100 border-0" style="height: 48px;">
                         <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
                     </button>
                 </div>
@@ -124,92 +46,98 @@
     <div class="row g-4">
         @forelse($bookings as $booking)
         <div class="col-lg-6">
-            <div class="premium-card p-4 h-100">
-                <div class="d-flex justify-content-between align-items-start mb-4">
-                    <div>
-                        <h6 class="fw-bold mb-1" style="color: var(--text-title); font-size: 1rem;">{{ optional($booking->destination)->name ?? 'Destinasi tidak ditemukan' }}</h6>
-                        <span class="badge rounded-pill px-2 py-1" style="background: rgba(0,0,0,0.06); color: #475569; font-size: 0.65rem; font-family: monospace;">#{{ $booking->booking_code }}</span>
+            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-white">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h6 class="fw-bold mb-1 text-dark fs-5">{{ optional($booking->destination)->name ?? 'Destination Not Found' }}</h6>
+                            <span class="badge bg-light text-secondary border rounded-pill px-2">#{{ $booking->booking_code }}</span>
+                        </div>
+                        @php
+                            $statusColor = $booking->status == 'Confirmed' ? 'success' : ($booking->status == 'Pending' ? 'warning' : 'danger');
+                        @endphp
+                        <span class="badge bg-{{ $statusColor }}-subtle text-{{ $statusColor }} border border-{{ $statusColor }} rounded-pill px-3 py-2 fw-bold text-uppercase" style="font-size: 0.7rem;">
+                            {{ $booking->status }}
+                        </span>
                     </div>
-                    <span class="badge rounded-pill px-3 py-2 fw-bold text-uppercase" style="background: {{ $booking->status == 'Confirmed' ? 'rgba(25, 135, 84, 0.1)' : ($booking->status == 'Pending' ? 'rgba(255, 193, 7, 0.1)' : 'rgba(220, 53, 69, 0.1)') }}; color: {{ $booking->status == 'Confirmed' ? '#198754' : ($booking->status == 'Pending' ? '#e6a800' : '#dc3545') }}; font-size: 0.65rem; letter-spacing: 0.5px; border: 1px solid rgba(0,0,0,0.05);">
-                        {{ $booking->status }}
-                    </span>
-                </div>
-                
-                <div class="row g-3 mb-4">
-                    <div class="col-6">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="booking-stat-icon" style="background: rgba(25, 135, 84, 0.1); color: var(--primary-green);">
-                                <i class="bi bi-calendar3 fs-5"></i>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="d-flex align-items-center gap-3 p-2 rounded-3 bg-light-subtle">
+                                <div class="bg-success bg-opacity-10 text-success rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-calendar3 fs-5"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Visit Date</small>
+                                    <span class="fw-bold text-dark">{{ $booking->visit_date ? $booking->visit_date->format('d M Y') : '-' }}</span>
+                                </div>
                             </div>
-                            <div>
-                                <small class="text-muted d-block fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">Visit Date</small>
-                                <span class="fw-bold" style="font-size: 0.9rem; color: var(--text-title);">{{ $booking->visit_date ? $booking->visit_date->format('d M Y') : '-' }}</span>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex align-items-center gap-3 p-2 rounded-3 bg-light-subtle">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-people fs-5"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Participants</small>
+                                    <span class="fw-bold text-dark">{{ $booking->participants }} Pax</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="booking-stat-icon" style="background: rgba(13, 110, 253, 0.1); color: #0d6efd;">
-                                <i class="bi bi-people fs-5"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted d-block fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">Participants</small>
-                                <span class="fw-bold" style="font-size: 0.9rem; color: var(--text-title);">{{ $booking->participants }} Pax</span>
-                            </div>
+                    
+                    <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted d-block" style="font-size: 0.75rem;">Total Amount</small>
+                            <h4 class="fw-bold text-success mb-0">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</h4>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="pt-3 border-top d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted d-block" style="font-size: 0.7rem;">Total Amount</small>
-                        <h5 class="fw-bold text-success mb-0">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</h5>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-premium-action btn-premium-success" data-bs-toggle="modal" data-bs-target="#detailModal{{ $booking->id }}">
-                            <i class="bi bi-info-circle"></i> Details
-                        </button>
-                        @if(in_array($booking->status, ['Pending', 'Confirmed']))
-                        <form action="{{ route('user.bookings.cancel', $booking) }}" method="POST" class="cancel-form d-inline-block">
-                            @csrf @method('PATCH')
-                            <button type="button" class="btn btn-premium-action btn-premium-danger btn-cancel">
-                                <i class="bi bi-x-circle"></i> Cancel
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-success border-2 rounded-pill px-3 fw-bold small text-uppercase" style="font-size: 0.7rem;" data-bs-toggle="modal" data-bs-target="#detailModal{{ $booking->id }}">
+                                <i class="bi bi-info-circle me-1"></i> Details
                             </button>
-                        </form>
-                        @endif
+                            @if(in_array($booking->status, ['Pending', 'Confirmed']))
+                            <form action="{{ route('user.bookings.cancel', $booking) }}" method="POST" class="cancel-form d-inline-block">
+                                @csrf @method('PATCH')
+                                <button type="button" class="btn btn-outline-danger border-2 rounded-pill px-3 fw-bold small text-uppercase btn-cancel" style="font-size: 0.7rem;">
+                                    <i class="bi bi-x-circle me-1"></i> Cancel
+                                </button>
+                            </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="modal fade" id="detailModal{{ $booking->id }}" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content border-0 shadow-lg" style="border-radius: 30px; overflow: hidden;">
-                    <div class="modal-header border-0 px-4 pt-4 pb-0">
-                        <h5 class="modal-title fw-bold" style="color: var(--text-title);"><i class="bi bi-file-text me-2 text-success"></i>Booking Details</h5>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow rounded-4">
+                    <div class="modal-header border-0 px-4 pt-4">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-file-text me-2 text-success"></i>Booking Details</h5>
                         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-borderless">
-                            <tr><th width="40%">Booking Code</th><td>#{{ $booking->booking_code }}</td></tr>
-                            <tr><th>Destination</th><td>{{ optional($booking->destination)->name }}</td></tr>
-                            <tr><th>Visit Date</th><td>{{ $booking->visit_date ? $booking->visit_date->format('d M Y') : '-' }}</td></tr>
-                            <tr><th>Participants</th><td>{{ $booking->participants }} orang</td></tr>
-                            <tr><th>Total Amount</th><td class="fw-bold text-success">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td></tr>
-                            <tr><th>Status</th><td><span class="badge bg-{{ $booking->status == 'Confirmed' ? 'success' : ($booking->status == 'Pending' ? 'warning' : 'danger') }}">{{ $booking->status }}</span></td></tr>
-                        </table>
+                    <div class="modal-body px-4 pb-4">
+                        <div class="bg-light rounded-4 p-3">
+                            <table class="table table-borderless mb-0">
+                                <tr class="border-bottom border-white"><th class="text-muted fw-normal">Code</th><td class="fw-bold">#{{ $booking->booking_code }}</td></tr>
+                                <tr class="border-bottom border-white"><th class="text-muted fw-normal">Destination</th><td class="fw-bold">{{ optional($booking->destination)->name }}</td></tr>
+                                <tr class="border-bottom border-white"><th class="text-muted fw-normal">Visit Date</th><td class="fw-bold">{{ $booking->visit_date ? $booking->visit_date->format('d M Y') : '-' }}</td></tr>
+                                <tr class="border-bottom border-white"><th class="text-muted fw-normal">Participants</th><td class="fw-bold">{{ $booking->participants }} orang</td></tr>
+                                <tr><th class="text-muted fw-normal">Amount</th><td class="fw-bold text-success fs-5">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td></tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         @empty
         <div class="col-12">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body text-center py-5">
-                    <i class="bi bi-inbox fs-1 text-muted"></i>
-                    <h5 class="mt-3 mb-2">No Bookings Found</h5>
-                    <p class="text-muted mb-3">You haven't made any bookings yet.</p>
-                    <a href="{{ route('destinations.index') }}" class="btn btn-success rounded-pill px-4">Explore Destinations</a>
+            <div class="card border-0 shadow-sm rounded-4 text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-inbox fs-1 text-muted opacity-25"></i>
+                    <h5 class="mt-3 text-dark fw-bold">No Bookings Found</h5>
+                    <p class="text-muted">You haven't made any bookings yet.</p>
+                    <a href="{{ route('destinations.index') }}" class="btn btn-success rounded-pill px-4 fw-bold">Find Destinations</a>
                 </div>
             </div>
         </div>
@@ -217,7 +145,7 @@
     </div>
 
     @if($bookings->hasPages())
-    <div class="mt-4">
+    <div class="mt-5 d-flex justify-content-center">
         {{ $bookings->appends(request()->query())->links() }}
     </div>
     @endif
@@ -230,21 +158,19 @@
     document.addEventListener('DOMContentLoaded', function() {
         const cancelButtons = document.querySelectorAll('.btn-cancel');
         cancelButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function() {
                 const form = this.closest('.cancel-form');
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You won't be able to revert this booking!",
+                    text: "This action cannot be undone!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#198754',
-                    cancelButtonColor: '#d33',
+                    cancelButtonColor: '#dc3545',
                     confirmButtonText: 'Yes, cancel it!',
-                    cancelButtonText: 'No, keep it'
+                    borderRadius: '20px'
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+                    if (result.isConfirmed) form.submit();
                 });
             });
         });
