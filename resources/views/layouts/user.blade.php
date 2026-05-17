@@ -37,7 +37,6 @@
             margin: 0;
         }
         
-        /* FIX: Sidebar Full ke Samping (Gak Ngambang) */
         .sidebar {
             position: fixed;
             top: 0;
@@ -65,6 +64,12 @@
             padding: 20px 12px;
             overflow-y: auto;
             flex: 1;
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            display: none;
         }
         
         .sidebar-menu a {
@@ -96,7 +101,6 @@
             font-size: 1.2rem;
         }
         
-        /* FIX: Main content mengikuti sidebar yang nempel */
         .main-content {
             margin-left: var(--sidebar-width);
             height: 100vh;
@@ -126,7 +130,6 @@
             transition: all 0.3s;
         }
 
-        /* Pagination Style */
         .pagination { gap: 10px; justify-content: center; margin-top: 20px; }
         .page-item .page-link {
             width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;
@@ -137,7 +140,6 @@
             background: var(--primary-green) !important; color: white !important; transform: scale(1.1);
         }
 
-        /* Responsive Mobile */
         @media (max-width: 991.98px) {
             .sidebar { left: -100%; }
             .main-content { margin-left: 0; }
