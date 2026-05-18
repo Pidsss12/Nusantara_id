@@ -183,6 +183,14 @@
                                                         <option value="Inactive" {{ $dest->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                                                     </select>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Location Details</label>
+                                                    <input type="text" name="location" class="form-control" value="{{ $dest->location }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Quota/Day</label>
+                                                    <input type="number" name="quota_per_day" class="form-control" value="{{ $dest->quota_per_day }}">
+                                                </div>
                                                 <div class="col-12">
                                                     <label class="form-label fw-bold">Description</label>
                                                     <textarea name="description" class="form-control" rows="3" required>{{ $dest->description }}</textarea>

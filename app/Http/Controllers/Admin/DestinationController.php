@@ -50,6 +50,7 @@ class DestinationController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'location' => 'required|string',
+            'quota_per_day' => 'nullable|integer|min:1',
         ]);
 
         $data = $request->all();
@@ -89,6 +90,8 @@ class DestinationController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'location' => 'required|string',
+            'status' => 'required|in:Active,Inactive',
+            'quota_per_day' => 'nullable|integer|min:1',
         ]);
 
         $data = $request->all();
