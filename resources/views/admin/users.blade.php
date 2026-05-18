@@ -50,7 +50,13 @@
                 </div>
                 <h6 class="fw-bold mb-1">{{ $user->name }}</h6>
                 <small class="text-muted d-block mb-2">{{ $user->email }}</small>
-                <span class="badge bg-{{ $user->role == 'admin' ? 'danger' : 'primary' }} mb-2">{{ ucfirst($user->role) }}</span>
+                
+                @if($user->role == 'admin')
+                    <span class="badge bg-danger mb-2 px-3 py-2 rounded-pill">{{ ucfirst($user->role) }}</span>
+                @else
+                    <span class="badge bg-success mb-2 px-3 py-2 rounded-pill">{{ ucfirst($user->role) }}</span>
+                @endif
+
                 <div class="d-flex justify-content-around text-center mt-3 pt-3 border-top">
                     <div>
                         <h6 class="fw-bold text-success mb-0">{{ $user->bookings_count ?? 0 }}</h6>
@@ -62,7 +68,8 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <button class="btn btn-sm btn-outline-primary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editUser{{ $user->id }}"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editUser{{ $user->id }}"><i class="bi bi-pencil"></i></button>
+                    
                     @if($user->role != 'admin' || \App\Models\User::where('role', 'admin')->count() > 1)
                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display:inline;" class="delete-form">
                         @csrf @method('DELETE')
@@ -79,7 +86,7 @@
             <div class="modal-content rounded-4">
                 <form action="{{ route('admin.users.update', $user) }}" method="POST">
                     @csrf @method('PUT')
-                    <div class="modal-header bg-primary text-white">
+                    <div class="modal-header bg-success text-white">
                         <h5 class="modal-title"><i class="bi bi-pencil me-2"></i>Edit User</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
@@ -106,7 +113,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill">Update User</button>
+                        <button type="submit" class="btn btn-success rounded-pill">Update User</button>
                     </div>
                 </form>
             </div>

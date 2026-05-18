@@ -94,7 +94,7 @@
                 <tbody>
                     @forelse($bookings as $booking)
                     <tr>
-                        <td class="px-4 fw-bold text-primary">#{{ $booking->booking_code }}</td>
+                        <td class="px-4 fw-bold" style="color: #1abc9c;">#{{ $booking->booking_code }}</td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 11px; flex-shrink: 0;">
@@ -107,7 +107,7 @@
                             </div>
                         </td>
                         <td>{{ $booking->destination->name ?? '-' }}</td>
-                        <td><span class="badge bg-primary-subtle text-primary border-0">{{ $booking->package->name ?? 'No Package' }}</span></td>
+                        <td><span class="badge border-0" style="background-color: rgba(26, 188, 156, 0.15); color: #1abc9c;">{{ $booking->package->name ?? 'No Package' }}</span></td>
                         <td>{{ $booking->visit_date->format('d M Y') }}</td>
                         <td><span class="badge bg-secondary">{{ $booking->participants }}</span></td>
                         <td class="fw-bold text-success">Rp {{ number_format($booking->total_amount, 0, ',', '.') }}</td>
@@ -123,15 +123,13 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <!-- Tombol Lihat (Eye) -->
                                 <button class="btn btn-sm rounded-3 d-flex align-items-center justify-content-center" 
-                                        style="width: 32px; height: 32px; border: 1.5px solid #0d6efd; color: #0d6efd; background: transparent;"
+                                        style="width: 32px; height: 32px; border: 1.5px solid #1abc9c; color: #1abc9c; background: transparent;"
                                         data-bs-toggle="modal" data-bs-target="#viewBooking{{ $booking->id }}" title="View">
                                     <i class="bi bi-eye"></i>
                                 </button>
 
                                 @if($booking->status == 'Pending')
-                                <!-- Tombol Konfirmasi (Check) -->
                                 <form action="{{ route('admin.bookings.status', $booking) }}" method="POST" class="confirm-status-form">
                                     @csrf @method('PATCH')
                                     <input type="hidden" name="status" value="Confirmed">
@@ -144,7 +142,6 @@
                                 @endif
 
                                 @if($booking->status != 'Cancelled')
-                                <!-- Tombol Silang (Cancel) -->
                                 <form action="{{ route('admin.bookings.status', $booking) }}" method="POST" class="cancel-status-form">
                                     @csrf @method('PATCH')
                                     <input type="hidden" name="status" value="Cancelled">
@@ -157,7 +154,6 @@
                                 @endif
                             </div>
 
-                            <!-- Modal Detail -->
                             <div class="modal fade" id="viewBooking{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -229,7 +225,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center py-5 text-muted">No bookings found</td>
+                        <td colspan="10" class="text-center py-5 text-muted">No bookings found</td>
                     </tr>
                     @endforelse
                 </tbody>

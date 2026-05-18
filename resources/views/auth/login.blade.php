@@ -214,6 +214,10 @@
             text-align: center;
             padding: 40px;
         }
+
+        input::-ms-reveal {
+            display: none;
+        }
     </style>
 </head>
 <body>

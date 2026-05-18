@@ -155,9 +155,10 @@
                         <small class="text-muted" style="font-size: 0.7rem;">2 minutes ago</small>
                     </div>
                 </div>
+                
                 <div class="d-flex gap-3 mb-4">
                     <div class="flex-shrink-0">
-                        <div class="rounded-3 p-2 bg-primary bg-opacity-10 text-primary">
+                        <div class="rounded-3 p-2 bg-success bg-opacity-10 text-success">
                             <i class="bi bi-person-fill-add fs-5"></i>
                         </div>
                     </div>

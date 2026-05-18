@@ -36,7 +36,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <select name="category" class="form-select border-0 bg-light" style="border-radius: 10px;">
+                        <select name="category" class="form-select border-0 bg-light custom-filter-select" style="border-radius: 10px;">
                             <option value="">All Categories</option>
                             @foreach($categories as $cat)
                             <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
@@ -84,7 +84,13 @@
                             </td>
                             <td class="fw-bold">{{ $dest->name }}</td>
                             <td>{{ $dest->province->name ?? '-' }}</td>
-                            <td><span class="badge bg-info-subtle text-info rounded-pill px-3">{{ $dest->category }}</span></td>
+                            
+                            <td>
+                                <span class="badge border-0" style="background-color: rgba(26, 188, 156, 0.15); color: #1abc9c; font-weight: 600; padding: 0.5em 1em; border-radius: 50px;">
+                                    {{ $dest->category }}
+                                </span>
+                            </td>
+                            
                             <td class="fw-medium">Rp {{ number_format($dest->price, 0, ',', '.') }}</td>
                             <td><span class="text-warning">⭐</span> {{ $dest->rating }}</td>
                             <td>{{ $dest->bookings_count }}</td>
@@ -93,7 +99,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <button class="btn btn-sm btn-light text-primary mx-1 rounded" data-bs-toggle="modal" data-bs-target="#viewModal{{ $dest->id }}"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-light mx-1 rounded" data-bs-toggle="modal" data-bs-target="#viewModal{{ $dest->id }}" style="color: #1abc9c;"><i class="bi bi-eye"></i></button>
                                     <button class="btn btn-sm btn-light text-success mx-1 rounded" data-bs-toggle="modal" data-bs-target="#editModal{{ $dest->id }}"><i class="bi bi-pencil"></i></button>
                                     <form action="{{ route('admin.destinations.destroy', $dest) }}" method="POST" style="display:inline;" class="delete-form">
                                         @csrf @method('DELETE')
@@ -283,6 +289,13 @@
         </div>
     </div>
 </div>
+
+<style>
+    .custom-filter-select:focus {
+        border-color: #1abc9c !important;
+        box-shadow: 0 0 0 0.25rem rgba(26, 188, 156, 0.25) !important;
+    }
+</style>
 @endsection
 
 @section('scripts')

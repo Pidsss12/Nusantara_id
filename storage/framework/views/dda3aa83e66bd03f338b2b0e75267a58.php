@@ -49,7 +49,13 @@
                 </div>
                 <h6 class="fw-bold mb-1"><?php echo e($user->name); ?></h6>
                 <small class="text-muted d-block mb-2"><?php echo e($user->email); ?></small>
-                <span class="badge bg-<?php echo e($user->role == 'admin' ? 'danger' : 'primary'); ?> mb-2"><?php echo e(ucfirst($user->role)); ?></span>
+                
+                <?php if($user->role == 'admin'): ?>
+                    <span class="badge bg-danger mb-2 px-3 py-2 rounded-pill"><?php echo e(ucfirst($user->role)); ?></span>
+                <?php else: ?>
+                    <span class="badge bg-success mb-2 px-3 py-2 rounded-pill"><?php echo e(ucfirst($user->role)); ?></span>
+                <?php endif; ?>
+
                 <div class="d-flex justify-content-around text-center mt-3 pt-3 border-top">
                     <div>
                         <h6 class="fw-bold text-success mb-0"><?php echo e($user->bookings_count ?? 0); ?></h6>
@@ -61,7 +67,8 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <button class="btn btn-sm btn-outline-primary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editUser<?php echo e($user->id); ?>"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editUser<?php echo e($user->id); ?>"><i class="bi bi-pencil"></i></button>
+                    
                     <?php if($user->role != 'admin' || \App\Models\User::where('role', 'admin')->count() > 1): ?>
                     <form action="<?php echo e(route('admin.users.destroy', $user)); ?>" method="POST" style="display:inline;" class="delete-form">
                         <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
@@ -78,7 +85,7 @@
             <div class="modal-content rounded-4">
                 <form action="<?php echo e(route('admin.users.update', $user)); ?>" method="POST">
                     <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
-                    <div class="modal-header bg-primary text-white">
+                    <div class="modal-header bg-success text-white">
                         <h5 class="modal-title"><i class="bi bi-pencil me-2"></i>Edit User</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
@@ -105,7 +112,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill">Update User</button>
+                        <button type="submit" class="btn btn-success rounded-pill">Update User</button>
                     </div>
                 </form>
             </div>

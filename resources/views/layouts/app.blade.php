@@ -13,17 +13,26 @@
     
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     
-    <style>
+<style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* 1. MEMBUAT BODY SEBAGAI FLEXBOX CONTAINER */
+        html, body {
+            height: 100%;
+        }
         body { 
             font-family: 'Outfit', sans-serif; 
             padding-top: 80px;
             margin: 0;
+            display: flex;
+            flex-direction: column;
         }
         
+        /* 2. MAIN AKAN MENGISI SEMUA SISA RUANG YANG KOSONG */
         main {
             margin: 0;
             padding: 0;
+            flex: 1 0 auto; /* Ini kunci agar footer terdorong ke bawah */
         }
         
         #main-header {
@@ -128,7 +137,6 @@
             flex: 1;
         }
         
-        /* Tombol Dashboard & Logout (Warna Putih) */
         .btn-dashboard, .btn-logout {
             padding: 10px 24px;
             border-radius: 25px;
@@ -149,7 +157,6 @@
             color: #146c43;
         }
 
-        /* Tombol Login (Khusus Guest) */
         .btn-login {
             padding: 10px 24px;
             border-radius: 25px;
@@ -179,6 +186,11 @@
         .page-item.active .page-link {
             background: linear-gradient(135deg, #198754 0%, #146c43 100%);
             color: white;
+        }
+
+        /* 3. FOOTER TETAP MENJAGA UKURANNYA */
+        footer {
+            flex-shrink: 0;
         }
     </style>
 </head>

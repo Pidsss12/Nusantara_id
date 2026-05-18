@@ -92,7 +92,7 @@
                 <tbody>
                     <?php $__empty_1 = true; $__currentLoopData = $bookings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booking): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td class="px-4 fw-bold text-primary">#<?php echo e($booking->booking_code); ?></td>
+                        <td class="px-4 fw-bold" style="color: #1abc9c;">#<?php echo e($booking->booking_code); ?></td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-size: 11px; flex-shrink: 0;">
@@ -106,7 +106,7 @@
                             </div>
                         </td>
                         <td><?php echo e($booking->destination->name ?? '-'); ?></td>
-                        <td><span class="badge bg-primary-subtle text-primary border-0"><?php echo e($booking->package->name ?? 'No Package'); ?></span></td>
+                        <td><span class="badge border-0" style="background-color: rgba(26, 188, 156, 0.15); color: #1abc9c;"><?php echo e($booking->package->name ?? 'No Package'); ?></span></td>
                         <td><?php echo e($booking->visit_date->format('d M Y')); ?></td>
                         <td><span class="badge bg-secondary"><?php echo e($booking->participants); ?></span></td>
                         <td class="fw-bold text-success">Rp <?php echo e(number_format($booking->total_amount, 0, ',', '.')); ?></td>
@@ -124,15 +124,13 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <!-- Tombol Lihat (Eye) -->
                                 <button class="btn btn-sm rounded-3 d-flex align-items-center justify-content-center" 
-                                        style="width: 32px; height: 32px; border: 1.5px solid #0d6efd; color: #0d6efd; background: transparent;"
+                                        style="width: 32px; height: 32px; border: 1.5px solid #1abc9c; color: #1abc9c; background: transparent;"
                                         data-bs-toggle="modal" data-bs-target="#viewBooking<?php echo e($booking->id); ?>" title="View">
                                     <i class="bi bi-eye"></i>
                                 </button>
 
                                 <?php if($booking->status == 'Pending'): ?>
-                                <!-- Tombol Konfirmasi (Check) -->
                                 <form action="<?php echo e(route('admin.bookings.status', $booking)); ?>" method="POST" class="confirm-status-form">
                                     <?php echo csrf_field(); ?> <?php echo method_field('PATCH'); ?>
                                     <input type="hidden" name="status" value="Confirmed">
@@ -145,7 +143,6 @@
                                 <?php endif; ?>
 
                                 <?php if($booking->status != 'Cancelled'): ?>
-                                <!-- Tombol Silang (Cancel) -->
                                 <form action="<?php echo e(route('admin.bookings.status', $booking)); ?>" method="POST" class="cancel-status-form">
                                     <?php echo csrf_field(); ?> <?php echo method_field('PATCH'); ?>
                                     <input type="hidden" name="status" value="Cancelled">
@@ -158,7 +155,6 @@
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Modal Detail -->
                             <div class="modal fade" id="viewBooking<?php echo e($booking->id); ?>" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -230,7 +226,7 @@
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
-                        <td colspan="9" class="text-center py-5 text-muted">No bookings found</td>
+                        <td colspan="10" class="text-center py-5 text-muted">No bookings found</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>

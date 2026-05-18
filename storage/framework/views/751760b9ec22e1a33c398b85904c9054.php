@@ -34,7 +34,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <select name="category" class="form-select border-0 bg-light" style="border-radius: 10px;">
+                        <select name="category" class="form-select border-0 bg-light custom-filter-select" style="border-radius: 10px;">
                             <option value="">All Categories</option>
                             <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <option value="<?php echo e($cat); ?>" <?php echo e(request('category') == $cat ? 'selected' : ''); ?>><?php echo e($cat); ?></option>
@@ -82,7 +82,14 @@
                             </td>
                             <td class="fw-bold"><?php echo e($dest->name); ?></td>
                             <td><?php echo e($dest->province->name ?? '-'); ?></td>
-                            <td><span class="badge bg-info-subtle text-info rounded-pill px-3"><?php echo e($dest->category); ?></span></td>
+                            
+                            <td>
+                                <span class="badge border-0" style="background-color: rgba(26, 188, 156, 0.15); color: #1abc9c; font-weight: 600; padding: 0.5em 1em; border-radius: 50px;">
+                                    <?php echo e($dest->category); ?>
+
+                                </span>
+                            </td>
+                            
                             <td class="fw-medium">Rp <?php echo e(number_format($dest->price, 0, ',', '.')); ?></td>
                             <td><span class="text-warning">⭐</span> <?php echo e($dest->rating); ?></td>
                             <td><?php echo e($dest->bookings_count); ?></td>
@@ -91,7 +98,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <button class="btn btn-sm btn-light text-primary mx-1 rounded" data-bs-toggle="modal" data-bs-target="#viewModal<?php echo e($dest->id); ?>"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-light mx-1 rounded" data-bs-toggle="modal" data-bs-target="#viewModal<?php echo e($dest->id); ?>" style="color: #1abc9c;"><i class="bi bi-eye"></i></button>
                                     <button class="btn btn-sm btn-light text-success mx-1 rounded" data-bs-toggle="modal" data-bs-target="#editModal<?php echo e($dest->id); ?>"><i class="bi bi-pencil"></i></button>
                                     <form action="<?php echo e(route('admin.destinations.destroy', $dest)); ?>" method="POST" style="display:inline;" class="delete-form">
                                         <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
@@ -282,6 +289,13 @@
         </div>
     </div>
 </div>
+
+<style>
+    .custom-filter-select:focus {
+        border-color: #1abc9c !important;
+        box-shadow: 0 0 0 0.25rem rgba(26, 188, 156, 0.25) !important;
+    }
+</style>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('scripts'); ?>

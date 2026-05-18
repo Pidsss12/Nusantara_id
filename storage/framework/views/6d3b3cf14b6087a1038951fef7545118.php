@@ -69,7 +69,7 @@
                         <small class="fw-bold"><?php echo e($pkg->duration); ?></small>
                     </div>
                     <div class="col-4 border-end">
-                        <i class="bi bi-people text-primary d-block mb-1"></i>
+                        <i class="bi bi-people text-success d-block mb-1"></i>
                         <small class="fw-bold"><?php echo e($pkg->max_participants); ?> Max</small>
                     </div>
                     <div class="col-4">
@@ -84,7 +84,7 @@
                         <h5 class="text-success fw-bold mb-0">Rp <?php echo e(number_format($pkg->price, 0, ',', '.')); ?></h5>
                     </div>
                     <div class="btn-group">
-                        <button class="btn btn-sm btn-outline-primary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editPackage<?php echo e($pkg->id); ?>">
+                        <button class="btn btn-sm btn-outline-success rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#editPackage<?php echo e($pkg->id); ?>">
                             <i class="bi bi-pencil"></i>
                         </button>
                         <form action="<?php echo e(route('admin.packages.destroy', $pkg)); ?>" method="POST" class="delete-form">
@@ -104,7 +104,7 @@
             <div class="modal-content rounded-4 border-0 shadow">
                 <form action="<?php echo e(route('admin.packages.update', $pkg)); ?>" method="POST" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
-                    <div class="modal-header bg-primary text-white border-0">
+                    <div class="modal-header bg-success text-white border-0">
                         <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Package</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
@@ -153,7 +153,7 @@
                     </div>
                     <div class="modal-footer border-0 p-4 pt-0">
                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Save Changes</button>
+                        <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm">Save Changes</button>
                     </div>
                 </form>
             </div>
