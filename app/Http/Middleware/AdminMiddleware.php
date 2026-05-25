@@ -15,8 +15,14 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
-            abort(403, 'Unauthorized access');
+        if (!$request->user()) {
+            return redirect()->route('login');
+        }
+
+        if ($request->user()->role !== 'admin') {
+            return redirect()
+                ->route('user.dashboard')
+                ->with('error', 'Akun user tidak memiliki akses ke halaman admin.');
         }
 
         return $next($request);

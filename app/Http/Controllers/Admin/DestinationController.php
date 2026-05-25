@@ -51,10 +51,19 @@ class DestinationController extends Controller
             'price' => 'required|numeric',
             'location' => 'required|string',
             'quota_per_day' => 'nullable|integer|min:1',
+            'unavailable_hotels' => 'nullable|array',
+            'unavailable_hotels.*' => 'string',
+            'unavailable_restaurants' => 'nullable|array',
+            'unavailable_restaurants.*' => 'string',
+            'unavailable_menus' => 'nullable|array',
+            'unavailable_menus.*' => 'string',
         ]);
 
         $data = $request->all();
         $data['slug'] = Str::slug($request->name);
+        $data['unavailable_hotels'] = $request->input('unavailable_hotels', []);
+        $data['unavailable_restaurants'] = $request->input('unavailable_restaurants', []);
+        $data['unavailable_menus'] = $request->input('unavailable_menus', []);
         
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -92,10 +101,19 @@ class DestinationController extends Controller
             'location' => 'required|string',
             'status' => 'required|in:Active,Inactive',
             'quota_per_day' => 'nullable|integer|min:1',
+            'unavailable_hotels' => 'nullable|array',
+            'unavailable_hotels.*' => 'string',
+            'unavailable_restaurants' => 'nullable|array',
+            'unavailable_restaurants.*' => 'string',
+            'unavailable_menus' => 'nullable|array',
+            'unavailable_menus.*' => 'string',
         ]);
 
         $data = $request->all();
         $data['slug'] = Str::slug($request->name);
+        $data['unavailable_hotels'] = $request->input('unavailable_hotels', []);
+        $data['unavailable_restaurants'] = $request->input('unavailable_restaurants', []);
+        $data['unavailable_menus'] = $request->input('unavailable_menus', []);
         
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');

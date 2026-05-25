@@ -39,14 +39,14 @@ Silahkan unduh file PDF untuk:
 3. **Scan QR Code** atau transfer manual
 4. **Konfirmasi pembayaran** melalui dashboard
 
-<x-mail::button :url="config('app.url') . '/user/invoices/' . $booking->id" color="success">
+<x-mail::button :url="route('user.invoices.show', $booking)" color="success">
 Konfirmasi Pembayaran
 </x-mail::button>
 @endif
 
 ---
 
-<x-mail::button :url="config('app.url') . '/user/dashboard'" color="primary">
+<x-mail::button :url="route('user.dashboard')" color="primary">
 Lihat Dashboard
 </x-mail::button>
 

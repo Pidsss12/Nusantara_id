@@ -24,6 +24,16 @@ class Destination extends Model
         'rating',
         'bookings_count',
         'status',
+        'occupied_seats',
+        'unavailable_hotels',
+        'unavailable_restaurants',
+        'unavailable_menus',
+    ];
+
+    protected $casts = [
+        'unavailable_hotels' => 'array',
+        'unavailable_restaurants' => 'array',
+        'unavailable_menus' => 'array',
     ];
 
     public function province()

@@ -57,11 +57,30 @@
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #ccc;
     }
-    .seat.selected { background-color: #198754 !important; border-color: #198754 !important; }
-    .seat.occupied { background-color: #dc3545 !important; border-color: #dc3545 !important; cursor: not-allowed; }
+    .seat.selected { background-color: #198754 !important; border-color: #198754 !important; color: white;}
+    .seat.occupied { background-color: #dc3545 !important; border-color: #dc3545 !important; cursor: not-allowed; color: white; }
     .aisle { width: 25px; }
 </style>
+
+@php
+    $occupiedSeats = [];
+    if (!empty($destination->occupied_seats)) {
+        if (is_array($destination->occupied_seats)) {
+            $occupiedSeats = array_map('intval', $destination->occupied_seats);
+        } else {
+            $occupiedSeats = array_filter(
+                array_map('intval', explode(',', str_replace(' ', '', $destination->occupied_seats)))
+            );
+        }
+    }
+    $totalSeats = 4;
+@endphp
 
 <div class="container py-5">
     @if(session('success'))
@@ -117,7 +136,7 @@
                     <h5 class="fw-bold mb-3">Pesan Sekarang</h5>
                     <h2 class="text-success fw-bold mb-4">
                         Rp {{ number_format($destination->price, 0, ',', '.') }} 
-                        <small class="fs-6 text-muted fw-normal">/ tiket</small>
+                        <small class="fs-6 text-muted fw-normal">/ paket dasar</small>
                     </h2>
                     
                     @auth
@@ -145,13 +164,18 @@
                         </div>
 
                         <div class="mb-4 input-wrapper">
+                            <label class="form-label small fw-bold text-muted">PILIH HOTEL / PENGINAPAN</label>
+                            <select class="form-select rounded-3" id="hotelSelect" name="hotel" required>
+                                <option value="">-- Pilih Hotel --</option>
+                                </select>
+                            <div class="error-bubble" id="err-hotelSelect">✖ Pilih hotel</div>
+                        </div>
+
+                        <div class="mb-4 input-wrapper">
                             <label class="form-label small fw-bold text-muted">PILIH RESTORAN</label>
                             <select class="form-select rounded-3" id="restaurantSelect" name="restaurant" required>
                                 <option value="">-- Pilih Restoran --</option>
-                                <option value="Resto Bahari">Resto Bahari (Seafood)</option>
-                                <option value="Warung Desa">Warung Desa (Tradisional)</option>
-                                <option value="Green Terrace">Green Terrace (Sehat/Organik)</option>
-                            </select>
+                                </select>
                             <div class="error-bubble" id="err-restaurantSelect">✖ Pilih restoran</div>
                         </div>
 
@@ -193,10 +217,15 @@
 
                         <div id="seatSection" class="mb-4 d-none">
                             <label class="form-label small fw-bold text-muted d-block text-center mb-2">PILIH KURSI (2 - 2)</label>
+                            
                             <div class="seat-container">
-                                <div class="seat"></div><div class="seat occupied"></div>
+                                <div class="seat {{ in_array(1, $occupiedSeats, true) ? 'occupied' : '' }}" data-seat="1"></div>
+                                <div class="seat {{ in_array(2, $occupiedSeats, true) ? 'occupied' : '' }}" data-seat="2"></div>
+                                
                                 <div class="aisle"></div>
-                                <div class="seat"></div><div class="seat"></div>
+                                
+                                <div class="seat {{ in_array(3, $occupiedSeats, true) ? 'occupied' : '' }}" data-seat="3"></div>
+                                <div class="seat {{ in_array(4, $occupiedSeats, true) ? 'occupied' : '' }}" data-seat="4"></div>
                             </div>
                         </div>
 
@@ -205,8 +234,12 @@
                                 <span class="badge bg-secondary mb-2" id="durationBadge">Durasi: 1 Hari</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1 small text-muted">
-                                <span>Tiket Destinasi (x<span class="pax-count">1</span> pax)</span>
+                                <span>Paket dasar wisata (x<span class="pax-count">1</span> pax)</span>
                                 <span id="destPriceText">Rp 0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1 small text-muted">
+                                <span>Hotel (<span class="day-count">1</span> hr x <span class="pax-count">1</span> pax)</span>
+                                <span id="hotelPriceText">Rp 0</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1 small text-muted">
                                 <span>Makan (<span id="freqText">0</span>x/hr x <span class="pax-count">1</span> pax x <span class="day-count">1</span> hr)</span>
@@ -246,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const participantsInput = document.getElementById('participants');
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
+    const hotelSelect = document.getElementById('hotelSelect');
     const restaurantSelect = document.getElementById('restaurantSelect');
     const menuSelect = document.getElementById('menuSelect');
     const mealFrequency = document.getElementById('mealFrequency');
@@ -256,34 +290,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const durationBadge = document.getElementById('durationBadge');
     const seats = document.querySelectorAll('.seat:not(.occupied)');
     
-    const menuData = {
-        "Resto Bahari": [
-            { name: "Lobster Bakar", price: 185000 },
-            { name: "Cumi Saos Padang", price: 75000 },
-            { name: "Kepiting Soka", price: 125000 },
-            { name: "Ikan Bakar Jimbaran", price: 95000 },
-            { name: "Udang Windu Madu", price: 85000 }
-        ],
-        "Warung Desa": [
-            { name: "Nasi Campur Bali", price: 45000 },
-            { name: "Ayam Betutu", price: 65000 },
-            { name: "Sate Lilit Ayam", price: 40000 },
-            { name: "Bebek Goreng Crispy", price: 85000 },
-            { name: "Lawar Ayam", price: 30000 }
-        ],
-        "Green Terrace": [
-            { name: "Salad Salmon", price: 120000 },
-            { name: "Smoothie Bowl", price: 55000 },
-            { name: "Quinoa Veggie Burger", price: 75000 },
-            { name: "Avocado Toast Special", price: 65000 },
-            { name: "Grilled Chicken Caesar", price: 80000 }
-        ]
-    };
+    // NAMA DESTINASI DARI BACKEND
+    const currentDestination = @json($destination->name ?? 'Default');
 
-    const basePrice = {{ $destination->price }};
+    // DATA DINAMIS BERDASARKAN DESTINASI
+    const locationData = @json(config('travel_pricing.destinations'));
+    const unavailableHotels = @json($destination->unavailable_hotels ?? []);
+    const unavailableRestaurants = @json($destination->unavailable_restaurants ?? []);
+    const unavailableMenus = @json($destination->unavailable_menus ?? []);
+
+    const destData = locationData[currentDestination] || locationData["Default"];
+    const basePrice = {{ $destination->price ?? 0 }};
 
     function formatRupiah(num) {
         return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // INIT DATA HOTEL & RESTORAN
+    if(hotelSelect && restaurantSelect) {
+        destData.hotels.forEach(hotel => {
+            const opt = document.createElement('option');
+            opt.value = hotel.name;
+            opt.setAttribute('data-price', hotel.price);
+            if (unavailableHotels.includes(hotel.name)) {
+                opt.disabled = true;
+                opt.textContent = `${hotel.name} - Penuh`;
+            } else {
+                opt.textContent = `${hotel.name} (kisaran ${formatRupiah(hotel.price)}/mlm)`;
+            }
+            hotelSelect.appendChild(opt);
+        });
+
+        destData.restaurants.forEach(resto => {
+            const opt = document.createElement('option');
+            opt.value = resto.name;
+            if (unavailableRestaurants.includes(resto.name)) {
+                opt.disabled = true;
+                opt.textContent = `${resto.name} - Tidak tersedia`;
+            } else {
+                opt.textContent = resto.name;
+            }
+            restaurantSelect.appendChild(opt);
+        });
     }
 
     seats.forEach(seat => {
@@ -315,7 +363,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(bubble) bubble.style.display = 'none';
                 }
             });
-            if(!isValid) { e.preventDefault(); firstField.focus(); }
+
+            // VALIDASI & OPER DATA KURSI KHUSUS OPSI UDARA
+            const udaraRadio = document.getElementById('udara');
+            if (udaraRadio && udaraRadio.checked) {
+                const max = parseInt(participantsInput.value) || 1;
+                const selectedSeats = document.querySelectorAll('.seat.selected');
+                
+                if (selectedSeats.length !== max) {
+                    alert(`Silakan pilih tepat ${max} kursi sesuai dengan jumlah peserta.`);
+                    isValid = false;
+                    if(!firstField) firstField = seatSection;
+                } else {
+                    // Membersihkan input kursi lama jika ada sebelum form dikirim
+                    form.querySelectorAll('input[name="seats[]"]').forEach(el => el.remove());
+                    
+                    // Membuat input hidden dinamis agar data kursi terkirim ke Laravel Backend
+                    selectedSeats.forEach(s => {
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'seats[]';
+                        hiddenInput.value = s.getAttribute('data-seat');
+                        form.appendChild(hiddenInput);
+                    });
+                }
+            }
+
+            if(!isValid) { e.preventDefault(); if(firstField && firstField.focus) firstField.focus(); }
         });
 
         form.querySelectorAll('input, select').forEach(el => {
@@ -330,11 +404,33 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateTotal() {
         const pax = parseInt(participantsInput.value) || 1;
         let days = 1;
+
+        // Otomatis reset kursi jika jumlah peserta dikurangi di tengah jalan
+        const selectedSeats = document.querySelectorAll('.seat.selected');
+        if (selectedSeats.length > pax) {
+            selectedSeats.forEach(s => s.classList.remove('selected'));
+        }
+
+        if (startDateInput.value) {
+            const startLimit = new Date(startDateInput.value);
+            const maxDate = new Date(startLimit);
+            maxDate.setDate(maxDate.getDate() + 4); 
+            endDateInput.min = startDateInput.value;
+            endDateInput.max = maxDate.toISOString().split('T')[0];
+        }
+
         if (startDateInput.value && endDateInput.value) {
             const start = new Date(startDateInput.value);
             const end = new Date(endDateInput.value);
             const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-            days = diffDays > 0 ? diffDays : 1;
+            
+            if(diffDays > 5) {
+                alert("Maksimal waktu wisata adalah 5 Hari.");
+                endDateInput.value = "";
+                days = 1;
+            } else {
+                days = diffDays > 0 ? diffDays : 1;
+            }
         }
         
         durationBadge.textContent = `Durasi: ${days} Hari`;
@@ -342,6 +438,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.pax-count').forEach(el => el.textContent = pax);
 
         const totalDest = basePrice * pax;
+
+        const hotelPrice = parseInt(hotelSelect.options[hotelSelect.selectedIndex]?.getAttribute('data-price')) || 0;
+        const totalHotel = hotelPrice * pax * days;
         
         const freq = parseInt(mealFrequency.value) || 0;
         document.getElementById('freqText').textContent = freq;
@@ -363,33 +462,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Logika Transportasi: Hanya dikali pax (Sekali Bayar), tidak dikali hari
         const totalTrans = transPrice * pax;
 
         document.getElementById('destPriceText').textContent = formatRupiah(totalDest);
+        document.getElementById('hotelPriceText').textContent = formatRupiah(totalHotel);
         document.getElementById('mealPriceText').textContent = formatRupiah(totalMeal);
         document.getElementById('transPriceText').textContent = formatRupiah(totalTrans);
-        document.getElementById('totalPrice').textContent = formatRupiah(totalDest + totalMeal + totalTrans);
-        
-        if (startDateInput.value) endDateInput.min = startDateInput.value;
+        document.getElementById('totalPrice').textContent = formatRupiah(totalDest + totalHotel + totalMeal + totalTrans);
     }
 
     restaurantSelect.addEventListener('change', function() {
         menuSelect.innerHTML = '<option value="">-- Pilih Menu --</option>';
-        if (this.value && menuData[this.value]) {
-            menuSection.classList.remove('d-none');
-            menuData[this.value].forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.name;
-                opt.setAttribute('data-price', item.price);
-                opt.textContent = `${item.name} (${formatRupiah(item.price)})`;
-                menuSelect.appendChild(opt);
-            });
+        if (this.value) {
+            const selectedResto = destData.restaurants.find(r => r.name === this.value);
+            if(selectedResto) {
+                menuSection.classList.remove('d-none');
+                selectedResto.menus.forEach(item => {
+                    const menuKey = `${selectedResto.name}::${item.name}`;
+                    const isUnavailable = unavailableMenus.includes(menuKey) || unavailableMenus.includes(item.name);
+                    const opt = document.createElement('option');
+                    opt.value = item.name;
+                    opt.setAttribute('data-price', item.price);
+                    if (isUnavailable) {
+                        opt.disabled = true;
+                        opt.textContent = `${item.name} - Habis`;
+                    } else {
+                        opt.textContent = `${item.name} (kisaran ${formatRupiah(item.price)})`;
+                    }
+                    menuSelect.appendChild(opt);
+                });
+            }
         } else { menuSection.classList.add('d-none'); }
         calculateTotal();
     });
 
-    [participantsInput, startDateInput, endDateInput, menuSelect, mealFrequency].forEach(el => el.addEventListener('input', calculateTotal));
+    [participantsInput, startDateInput, endDateInput, hotelSelect, menuSelect, mealFrequency].forEach(el => el.addEventListener('input', calculateTotal));
     transportRadios.forEach(r => r.addEventListener('change', calculateTotal));
     calculateTotal();
 });

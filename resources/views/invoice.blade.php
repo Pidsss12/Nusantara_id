@@ -166,6 +166,9 @@
 </div>
 
 <script>
+const invoiceDetailUrlTemplate = @json(route('user.invoices.show', ['booking' => '__BOOKING_ID__']));
+const invoicePdfUrlTemplate = @json(route('user.invoices.download-pdf', ['booking' => '__BOOKING_ID__']));
+
 document.getElementById('invoiceForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -231,12 +234,12 @@ document.getElementById('invoiceForm').addEventListener('submit', function(e) {
                 alertBox.className = 'alert alert-warning mt-4';
                 alertBox.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i><strong>Menunggu Pembayaran</strong><br><small>Silakan transfer ke rekening berikut:<br>BCA 1234567890 a.n. PT Nusantara Green</small>';
                 document.getElementById('confirmBtn').classList.remove('d-none');
-                document.getElementById('confirmBtn').href = `/user/invoices/${data.booking_id}`;
+                document.getElementById('confirmBtn').href = invoiceDetailUrlTemplate.replace('__BOOKING_ID__', data.booking_id);
             }
 
             // PDF Button
             document.getElementById('pdfBtn').onclick = () => {
-                window.location.href = `/user/invoices/${data.booking_id}/download-pdf`;
+                window.location.href = invoicePdfUrlTemplate.replace('__BOOKING_ID__', data.booking_id);
             };
 
             // Show result

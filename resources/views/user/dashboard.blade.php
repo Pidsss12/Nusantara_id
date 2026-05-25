@@ -298,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     var allMarkers = [];
+    var destinationUrlTemplate = @json(route('destination.show', ['id' => '__DESTINATION_ID__']));
 
     provinces.forEach(function(prov) {
         var match = backendDestinations.find(d => d.province && d.province.name === prov.name);
@@ -314,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p style="font-size: 0.75rem; color: #666; margin-bottom: 10px;">Premium ecotourism destination in ${prov.name}.</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <span style="font-weight: 800; color: #198754;">Rp ${new Intl.NumberFormat('id-ID').format(data.price)}</span>
-                    ${isReal ? `<a href="/destination/${data.id}" class="btn btn-sm btn-success py-1 px-2" style="font-size: 0.65rem;">Explore</a>` : ''}
+                    ${isReal ? `<a href="${destinationUrlTemplate.replace('__DESTINATION_ID__', data.id)}" class="btn btn-sm btn-success py-1 px-2" style="font-size: 0.65rem;">Explore</a>` : ''}
                 </div>
             </div>
         `;

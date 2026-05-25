@@ -43,6 +43,7 @@ class BookingController extends Controller
             'participants' => 'required|integer|min:1',
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'hotel' => 'required|string',
             'restaurant' => 'required|string',
             'menu' => 'required|string',
             'meal_frequency' => 'required|integer|min:1',
@@ -59,14 +60,47 @@ class BookingController extends Controller
         // Harga Dasar Destinasi
         $totalAmount = $destination->price * $validated['participants'];
 
-        // Tambahan Biaya Restoran & Menu (Simulasi harga karena di form dikirim nama menu)
-        // Kita bisa ambil harga dari data menu di frontend, tapi untuk keamanan kita simulasi di backend
-        $menuPrices = [
-            'Lobster Bakar' => 185000, 'Cumi Saos Padang' => 75000, 'Kepiting Soka' => 125000, 'Ikan Bakar Jimbaran' => 95000, 'Udang Windu Madu' => 85000,
-            'Nasi Campur Bali' => 45000, 'Ayam Betutu' => 65000, 'Sate Lilit Ayam' => 40000, 'Bebek Goreng Crispy' => 85000, 'Lawar Ayam' => 30000,
-            'Salad Salmon' => 120000, 'Smoothie Bowl' => 55000, 'Quinoa Veggie Burger' => 75000, 'Avocado Toast Special' => 65000, 'Grilled Chicken Caesar' => 80000
-        ];
-        $menuPrice = $menuPrices[$validated['menu']] ?? 0;
+        $travelOptions = config('travel_pricing.destinations');
+        $destinationOptions = $travelOptions[$destination->name] ?? $travelOptions['Default'];
+
+        $hotelPrices = collect($destinationOptions['hotels'])->pluck('price', 'name')->all();
+        $selectedRestaurant = collect($destinationOptions['restaurants'])->firstWhere('name', $validated['restaurant']);
+        $menuPrices = $selectedRestaurant
+            ? collect($selectedRestaurant['menus'])->pluck('price', 'name')->all()
+            : [];
+        $unavailableHotels = $destination->unavailable_hotels ?? [];
+        $unavailableRestaurants = $destination->unavailable_restaurants ?? [];
+        $unavailableMenus = $destination->unavailable_menus ?? [];
+
+        if (!$selectedRestaurant || !array_key_exists($validated['hotel'], $hotelPrices) || !array_key_exists($validated['menu'], $menuPrices)) {
+            return back()
+                ->withErrors(['booking' => 'Pilihan hotel atau menu tidak valid untuk destinasi ini.'])
+                ->withInput();
+        }
+
+        if (in_array($validated['hotel'], $unavailableHotels, true)) {
+            return back()
+                ->withErrors(['hotel' => 'Hotel ini sedang penuh. Silakan pilih hotel lain.'])
+                ->withInput();
+        }
+
+        if (in_array($validated['restaurant'], $unavailableRestaurants, true)) {
+            return back()
+                ->withErrors(['restaurant' => 'Restoran ini sedang tidak tersedia. Silakan pilih restoran lain.'])
+                ->withInput();
+        }
+
+        $menuKey = $validated['restaurant'] . '::' . $validated['menu'];
+        if (in_array($menuKey, $unavailableMenus, true) || in_array($validated['menu'], $unavailableMenus, true)) {
+            return back()
+                ->withErrors(['menu' => 'Menu ini sedang habis. Silakan pilih menu lain.'])
+                ->withInput();
+        }
+
+        $hotelPrice = $hotelPrices[$validated['hotel']];
+        $totalAmount += $hotelPrice * $validated['participants'] * $days;
+
+        $menuPrice = $menuPrices[$validated['menu']];
         $totalAmount += ($menuPrice * $validated['meal_frequency']) * $validated['participants'] * $days;
 
         // Tambahan Biaya Transportasi
@@ -75,6 +109,7 @@ class BookingController extends Controller
 
         // Kumpulkan informasi detail ke dalam notes
         $notes = "Pesanan Ekowisata:\n" .
+                 "- Hotel: {$validated['hotel']}\n" .
                  "- Restoran: {$validated['restaurant']}\n" .
                  "- Menu: {$validated['menu']}\n" .
                  "- Frekuensi Makan: {$validated['meal_frequency']}x sehari\n" .
