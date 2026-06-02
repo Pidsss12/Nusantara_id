@@ -202,6 +202,7 @@
             border: 1px solid var(--glass-border);
         }
     </style>
+    <?php echo $__env->yieldContent('styles'); ?>
 </head>
 <body>
 

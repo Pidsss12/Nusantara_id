@@ -202,6 +202,7 @@
             border: 1px solid var(--glass-border);
         }
     </style>
+    @yield('styles')
 </head>
 <body>
 

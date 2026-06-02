@@ -146,6 +146,7 @@
             .sidebar.show { left: 0; }
         }
     </style>
+    @yield('styles')
 </head>
 <body>
     <div class="sidebar">
